@@ -3,6 +3,6 @@ import { ExpenseCategoriesService } from './expense-categories.service';
 import { ExpenseCategoriesResolver } from './expense-categories.resolver';
 
 @Module({
-  providers: [ExpenseCategoriesResolver, ExpenseCategoriesService]
+  providers: [ExpenseCategoriesResolver, ExpenseCategoriesService],
 })
 export class ExpenseCategoriesModule {}

@@ -6,10 +6,15 @@ import { UpdateIncomeCategoryInput } from './dto/update-income-category.input';
 
 @Resolver(() => IncomeCategory)
 export class IncomeCategoriesResolver {
-  constructor(private readonly incomeCategoriesService: IncomeCategoriesService) {}
+  constructor(
+    private readonly incomeCategoriesService: IncomeCategoriesService,
+  ) {}
 
   @Mutation(() => IncomeCategory)
-  createIncomeCategory(@Args('createIncomeCategoryInput') createIncomeCategoryInput: CreateIncomeCategoryInput) {
+  createIncomeCategory(
+    @Args('createIncomeCategoryInput')
+    createIncomeCategoryInput: CreateIncomeCategoryInput,
+  ) {
     return this.incomeCategoriesService.create(createIncomeCategoryInput);
   }
 
@@ -24,8 +29,14 @@ export class IncomeCategoriesResolver {
   }
 
   @Mutation(() => IncomeCategory)
-  updateIncomeCategory(@Args('updateIncomeCategoryInput') updateIncomeCategoryInput: UpdateIncomeCategoryInput) {
-    return this.incomeCategoriesService.update(updateIncomeCategoryInput.id, updateIncomeCategoryInput);
+  updateIncomeCategory(
+    @Args('updateIncomeCategoryInput')
+    updateIncomeCategoryInput: UpdateIncomeCategoryInput,
+  ) {
+    return this.incomeCategoriesService.update(
+      updateIncomeCategoryInput.id,
+      updateIncomeCategoryInput,
+    );
   }
 
   @Mutation(() => IncomeCategory)

@@ -1,0 +1,51 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input CreateExpenseCategoryInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input CreateIncomeCategoryInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type ExpenseCategory {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type IncomeCategory {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type Mutation {
+  createExpenseCategory(createExpenseCategoryInput: CreateExpenseCategoryInput!): ExpenseCategory!
+  createIncomeCategory(createIncomeCategoryInput: CreateIncomeCategoryInput!): IncomeCategory!
+  removeExpenseCategory(id: Int!): ExpenseCategory!
+  removeIncomeCategory(id: Int!): IncomeCategory!
+  updateExpenseCategory(updateExpenseCategoryInput: UpdateExpenseCategoryInput!): ExpenseCategory!
+  updateIncomeCategory(updateIncomeCategoryInput: UpdateIncomeCategoryInput!): IncomeCategory!
+}
+
+type Query {
+  expenseCategories: [ExpenseCategory!]!
+  expenseCategory(id: Int!): ExpenseCategory!
+  incomeCategories: [IncomeCategory!]!
+  incomeCategory(id: Int!): IncomeCategory!
+}
+
+input UpdateExpenseCategoryInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input UpdateIncomeCategoryInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
