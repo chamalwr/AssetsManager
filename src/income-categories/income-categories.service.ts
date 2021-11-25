@@ -37,6 +37,7 @@ export class IncomeCategoriesService {
     return await this.incomeCategoryModel.findByIdAndUpdate(
       id,
       updateIncomeCategoryInput,
+      { returnOriginal: false }
     );
   }
 
