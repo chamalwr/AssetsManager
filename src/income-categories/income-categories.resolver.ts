@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { IncomeCategoriesService } from './income-categories.service';
 import { IncomeCategory } from './entities/income-category.entity';
 import { CreateIncomeCategoryInput } from './dto/create-income-category.input';

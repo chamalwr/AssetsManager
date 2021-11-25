@@ -7,7 +7,7 @@ export type IncomeCategoryDocument = IncomeCategory & Document;
 @Schema()
 export class IncomeCategory {
   @Field(() => ID, { description: 'Income Category ID' })
-  _id: number;
+  _id: string;
 
   @Field(() => String, { description: 'Income Category Name' })
   @Prop()
