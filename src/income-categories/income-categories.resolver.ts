@@ -19,8 +19,8 @@ export class IncomeCategoriesResolver {
   }
 
   @Query(() => [IncomeCategory], { name: 'incomeCategories' })
-  findAll() {
-    return this.incomeCategoriesService.findAll();
+  findAll(@Args('userId') userId: string) {
+    return this.incomeCategoriesService.findAll(userId);
   }
 
   @Query(() => IncomeCategory, { name: 'incomeCategory' })

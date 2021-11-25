@@ -22,8 +22,8 @@ export class IncomeCategoriesService {
     return createdIncomeCategory.save();
   }
 
-  findAll() {
-    return this.incomeCategoryModel.find().exec();
+  async findAll(userId: string) {
+    return await this.incomeCategoryModel.find({'userId': userId});
   }
 
   async findOne(id: string) {
