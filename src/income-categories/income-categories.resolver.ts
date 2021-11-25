@@ -24,23 +24,21 @@ export class IncomeCategoriesResolver {
   }
 
   @Query(() => IncomeCategory, { name: 'incomeCategory' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  findOne(@Args('id') id: string) {
     return this.incomeCategoriesService.findOne(id);
   }
 
   @Mutation(() => IncomeCategory)
   updateIncomeCategory(
+    @Args('id') id: string,
     @Args('updateIncomeCategoryInput')
     updateIncomeCategoryInput: UpdateIncomeCategoryInput,
   ) {
-    return this.incomeCategoriesService.update(
-      updateIncomeCategoryInput.id,
-      updateIncomeCategoryInput,
-    );
+    return this.incomeCategoriesService.update(id, updateIncomeCategoryInput);
   }
 
   @Mutation(() => IncomeCategory)
-  removeIncomeCategory(@Args('id', { type: () => Int }) id: number) {
+  removeIncomeCategory(@Args('id') id: string) {
     return this.incomeCategoriesService.remove(id);
   }
 }

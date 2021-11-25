@@ -8,8 +8,14 @@ input CreateExpenseCategoryInput {
 }
 
 input CreateIncomeCategoryInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  """Income Category Description"""
+  description: String!
+
+  """Income Category Name"""
+  name: String!
+
+  """Income Category Description"""
+  userId: String!
 }
 
 type ExpenseCategory {
@@ -18,24 +24,33 @@ type ExpenseCategory {
 }
 
 type IncomeCategory {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  """Income Category ID"""
+  _id: ID!
+
+  """Income Category Description"""
+  description: String!
+
+  """Income Category Name"""
+  name: String!
+
+  """Income Category Owner Id"""
+  userId: String!
 }
 
 type Mutation {
   createExpenseCategory(createExpenseCategoryInput: CreateExpenseCategoryInput!): ExpenseCategory!
   createIncomeCategory(createIncomeCategoryInput: CreateIncomeCategoryInput!): IncomeCategory!
   removeExpenseCategory(id: Int!): ExpenseCategory!
-  removeIncomeCategory(id: Int!): IncomeCategory!
+  removeIncomeCategory(id: String!): IncomeCategory!
   updateExpenseCategory(updateExpenseCategoryInput: UpdateExpenseCategoryInput!): ExpenseCategory!
-  updateIncomeCategory(updateIncomeCategoryInput: UpdateIncomeCategoryInput!): IncomeCategory!
+  updateIncomeCategory(id: String!, updateIncomeCategoryInput: UpdateIncomeCategoryInput!): IncomeCategory!
 }
 
 type Query {
   expenseCategories: [ExpenseCategory!]!
   expenseCategory(id: Int!): ExpenseCategory!
   incomeCategories: [IncomeCategory!]!
-  incomeCategory(id: Int!): IncomeCategory!
+  incomeCategory(id: String!): IncomeCategory!
 }
 
 input UpdateExpenseCategoryInput {
@@ -45,7 +60,12 @@ input UpdateExpenseCategoryInput {
 }
 
 input UpdateIncomeCategoryInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  """Income Category Description"""
+  description: String!
+
+  """Income Category Name"""
+  name: String!
+
+  """Income Category Description"""
+  userId: String
 }

@@ -1,26 +1,46 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { CreateIncomeCategoryInput } from './dto/create-income-category.input';
 import { UpdateIncomeCategoryInput } from './dto/update-income-category.input';
+import {
+  IncomeCategory,
+  IncomeCategoryDocument,
+} from './entities/income-category.entity';
 
 @Injectable()
 export class IncomeCategoriesService {
-  create(createIncomeCategoryInput: CreateIncomeCategoryInput) {
-    return 'This action adds a new incomeCategory';
+  constructor(
+    @InjectModel(IncomeCategory.name)
+    private readonly incomeCategoryModel: Model<IncomeCategoryDocument>,
+  ) {}
+
+  async create(createIncomeCategoryInput: CreateIncomeCategoryInput) {
+    const createdIncomeCategory = await this.incomeCategoryModel.create(
+      createIncomeCategoryInput,
+    );
+    return createdIncomeCategory.save();
   }
 
   findAll() {
-    return `This action returns all incomeCategories`;
+    return this.incomeCategoryModel.find().exec();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} incomeCategory`;
+  async findOne(id: string) {
+    return await this.incomeCategoryModel.findById(id);
   }
 
-  update(id: number, updateIncomeCategoryInput: UpdateIncomeCategoryInput) {
-    return `This action updates a #${id} incomeCategory`;
+  async update(
+    id: string,
+    updateIncomeCategoryInput: UpdateIncomeCategoryInput,
+  ) {
+    return await this.incomeCategoryModel.findByIdAndUpdate(
+      id,
+      updateIncomeCategoryInput,
+    );
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} incomeCategory`;
+  async remove(id: string) {
+    return await this.incomeCategoryModel.findByIdAndDelete(id)
   }
 }
