@@ -1,10 +1,13 @@
 import { CreateIncomeCategoryInput } from './create-income-category.input';
-import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
+import { InputType, Field, PartialType } from '@nestjs/graphql';
 
 @InputType()
 export class UpdateIncomeCategoryInput extends PartialType(
   CreateIncomeCategoryInput,
 ) {
-  @Field(() => Int)
-  id: number;
+  @Field(() => String, { description: 'Income Category Name' })
+  name: string;
+
+  @Field(() => String, { description: 'Income Category Description' })
+  description: string;
 }

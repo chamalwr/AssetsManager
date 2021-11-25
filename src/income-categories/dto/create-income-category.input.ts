@@ -1,7 +1,13 @@
-import { InputType, Int, Field } from '@nestjs/graphql';
+import { InputType, Field } from '@nestjs/graphql';
 
 @InputType()
 export class CreateIncomeCategoryInput {
-  @Field(() => Int, { description: 'Example field (placeholder)' })
-  exampleField: number;
+  @Field(() => String, { description: 'Income Category Name' })
+  name: string;
+
+  @Field(() => String, { description: 'Income Category Description' })
+  description: string;
+
+  @Field(() => String, { description: 'Income Category Description' })
+  userId: string;
 }

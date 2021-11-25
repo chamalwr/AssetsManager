@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { IncomeCategoriesService } from './income-categories.service';
 import { IncomeCategory } from './entities/income-category.entity';
 import { CreateIncomeCategoryInput } from './dto/create-income-category.input';
@@ -19,28 +19,26 @@ export class IncomeCategoriesResolver {
   }
 
   @Query(() => [IncomeCategory], { name: 'incomeCategories' })
-  findAll() {
-    return this.incomeCategoriesService.findAll();
+  findAll(@Args('userId') userId: string) {
+    return this.incomeCategoriesService.findAll(userId);
   }
 
   @Query(() => IncomeCategory, { name: 'incomeCategory' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  findOne(@Args('id') id: string) {
     return this.incomeCategoriesService.findOne(id);
   }
 
   @Mutation(() => IncomeCategory)
   updateIncomeCategory(
+    @Args('id') id: string,
     @Args('updateIncomeCategoryInput')
     updateIncomeCategoryInput: UpdateIncomeCategoryInput,
   ) {
-    return this.incomeCategoriesService.update(
-      updateIncomeCategoryInput.id,
-      updateIncomeCategoryInput,
-    );
+    return this.incomeCategoriesService.update(id, updateIncomeCategoryInput);
   }
 
   @Mutation(() => IncomeCategory)
-  removeIncomeCategory(@Args('id', { type: () => Int }) id: number) {
+  removeIncomeCategory(@Args('id') id: string) {
     return this.incomeCategoriesService.remove(id);
   }
 }
