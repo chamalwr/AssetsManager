@@ -7,6 +7,7 @@ import {
   IncomeCategory,
   IncomeCategoryDocument,
 } from './entities/income-category.entity';
+import { IncomeResultError } from './union/income-category-result.union';
 
 @Injectable()
 export class IncomeCategoriesService {
@@ -32,6 +33,11 @@ export class IncomeCategoriesService {
       return await this.incomeCategoryModel.find({ userId: userId });
     } else {
       this.logger.warn(`User ID ${userId} has no Categories`);
+       return {
+        operation: "FIND_ALL",
+        message: "Selected user id has no any category",
+        reason: `User ID ${userId} has no Categories`
+       }
     }
   }
 
@@ -41,6 +47,11 @@ export class IncomeCategoriesService {
       return await this.incomeCategoryModel.findById(id);
     } else {
       this.logger.warn(`No Category found on ID: ${id}`);
+      return {
+        operation: "FIND_BY_ID",
+        message: "No any category found on given ID",
+        reason: `ID ${id} has no Categories`
+       }
     }
   }
 

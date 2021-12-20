@@ -37,6 +37,19 @@ type IncomeCategory {
   userId: String!
 }
 
+union IncomeCategoryResult = IncomeCategory | IncomeResultError
+
+type IncomeResultError {
+  """Error Message"""
+  message: String!
+
+  """Operation Performed"""
+  operation: String!
+
+  """Error Description"""
+  reason: String!
+}
+
 type Mutation {
   createExpenseCategory(createExpenseCategoryInput: CreateExpenseCategoryInput!): ExpenseCategory!
   createIncomeCategory(createIncomeCategoryInput: CreateIncomeCategoryInput!): IncomeCategory!
@@ -50,7 +63,7 @@ type Query {
   expenseCategories: [ExpenseCategory!]!
   expenseCategory(id: Int!): ExpenseCategory!
   incomeCategories(userId: String!): [IncomeCategory!]!
-  incomeCategory(id: String!): IncomeCategory!
+  incomeCategory(id: String!): IncomeCategoryResult!
 }
 
 input UpdateExpenseCategoryInput {
