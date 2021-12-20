@@ -11,7 +11,7 @@ export class IncomeCategoriesResolver {
     private readonly incomeCategoriesService: IncomeCategoriesService,
   ) {}
 
-  @Mutation(() => IncomeCategory)
+  @Mutation(() => IncomeCategoryResult)
   createIncomeCategory(
     @Args('createIncomeCategoryInput')
     createIncomeCategoryInput: CreateIncomeCategoryInput,
@@ -19,7 +19,7 @@ export class IncomeCategoriesResolver {
     return this.incomeCategoriesService.create(createIncomeCategoryInput);
   }
 
-  @Query(() => [IncomeCategory], { name: 'incomeCategories' })
+  @Query(() => [IncomeCategoryResult], { name: 'incomeCategories' })
   findAll(@Args('userId') userId: string) {
     return this.incomeCategoriesService.findAll(userId);
   }
@@ -29,7 +29,7 @@ export class IncomeCategoriesResolver {
     return this.incomeCategoriesService.findOne(id);
   }
 
-  @Mutation(() => IncomeCategory)
+  @Mutation(() => IncomeCategoryResult)
   updateIncomeCategory(
     @Args('id') id: string,
     @Args('updateIncomeCategoryInput')
@@ -38,7 +38,7 @@ export class IncomeCategoriesResolver {
     return this.incomeCategoriesService.update(id, updateIncomeCategoryInput);
   }
 
-  @Mutation(() => IncomeCategory)
+  @Mutation(() => IncomeCategoryResult)
   removeIncomeCategory(@Args('id') id: string) {
     return this.incomeCategoriesService.remove(id);
   }

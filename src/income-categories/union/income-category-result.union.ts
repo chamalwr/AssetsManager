@@ -3,21 +3,21 @@ import { IncomeCategory } from '../entities/income-category.entity';
 
 export const IncomeCategoryResult = createUnionType({
     name: 'IncomeCategoryResult',
-    types: ()=> [IncomeCategory, IncomeResultError],
+    types: ()=> [IncomeCategory, IncomeCategoryResultError],
     resolveType(value) {
         console.log(value)
         if (value.name) {
             return IncomeCategory;
           }
           if (value.reason) {
-            return IncomeResultError;
+            return IncomeCategoryResultError;
           }
           return null;
       },
 })
 
 @ObjectType()
-export class IncomeResultError {
+export class IncomeCategoryResultError {
     @Field(() => String, { description: 'Operation Performed' })
     operation: string;
     @Field(() => String, { description: 'Error Message' })
