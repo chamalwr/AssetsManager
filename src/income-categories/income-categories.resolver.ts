@@ -3,6 +3,7 @@ import { IncomeCategoriesService } from './income-categories.service';
 import { IncomeCategory } from './entities/income-category.entity';
 import { CreateIncomeCategoryInput } from './dto/create-income-category.input';
 import { UpdateIncomeCategoryInput } from './dto/update-income-category.input';
+import { IncomeCategoryResult } from './union/income-category-result.union';
 
 @Resolver(() => IncomeCategory)
 export class IncomeCategoriesResolver {
@@ -10,7 +11,7 @@ export class IncomeCategoriesResolver {
     private readonly incomeCategoriesService: IncomeCategoriesService,
   ) {}
 
-  @Mutation(() => IncomeCategory)
+  @Mutation(() => IncomeCategoryResult)
   createIncomeCategory(
     @Args('createIncomeCategoryInput')
     createIncomeCategoryInput: CreateIncomeCategoryInput,
@@ -18,17 +19,17 @@ export class IncomeCategoriesResolver {
     return this.incomeCategoriesService.create(createIncomeCategoryInput);
   }
 
-  @Query(() => [IncomeCategory], { name: 'incomeCategories' })
+  @Query(() => [IncomeCategoryResult], { name: 'incomeCategories' })
   findAll(@Args('userId') userId: string) {
     return this.incomeCategoriesService.findAll(userId);
   }
 
-  @Query(() => IncomeCategory, { name: 'incomeCategory' })
+  @Query(() => IncomeCategoryResult, { name: 'incomeCategory' })
   findOne(@Args('id') id: string) {
     return this.incomeCategoriesService.findOne(id);
   }
 
-  @Mutation(() => IncomeCategory)
+  @Mutation(() => IncomeCategoryResult)
   updateIncomeCategory(
     @Args('id') id: string,
     @Args('updateIncomeCategoryInput')
@@ -37,7 +38,7 @@ export class IncomeCategoriesResolver {
     return this.incomeCategoriesService.update(id, updateIncomeCategoryInput);
   }
 
-  @Mutation(() => IncomeCategory)
+  @Mutation(() => IncomeCategoryResult)
   removeIncomeCategory(@Args('id') id: string) {
     return this.incomeCategoriesService.remove(id);
   }

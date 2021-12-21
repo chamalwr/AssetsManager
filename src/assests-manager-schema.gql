@@ -37,20 +37,33 @@ type IncomeCategory {
   userId: String!
 }
 
+union IncomeCategoryResult = IncomeCategory | IncomeCategoryResultError
+
+type IncomeCategoryResultError {
+  """Error Message"""
+  message: String!
+
+  """Operation Performed"""
+  operation: String!
+
+  """Error Description"""
+  reason: String!
+}
+
 type Mutation {
   createExpenseCategory(createExpenseCategoryInput: CreateExpenseCategoryInput!): ExpenseCategory!
-  createIncomeCategory(createIncomeCategoryInput: CreateIncomeCategoryInput!): IncomeCategory!
+  createIncomeCategory(createIncomeCategoryInput: CreateIncomeCategoryInput!): IncomeCategoryResult!
   removeExpenseCategory(id: Int!): ExpenseCategory!
-  removeIncomeCategory(id: String!): IncomeCategory!
+  removeIncomeCategory(id: String!): IncomeCategoryResult!
   updateExpenseCategory(updateExpenseCategoryInput: UpdateExpenseCategoryInput!): ExpenseCategory!
-  updateIncomeCategory(id: String!, updateIncomeCategoryInput: UpdateIncomeCategoryInput!): IncomeCategory!
+  updateIncomeCategory(id: String!, updateIncomeCategoryInput: UpdateIncomeCategoryInput!): IncomeCategoryResult!
 }
 
 type Query {
   expenseCategories: [ExpenseCategory!]!
   expenseCategory(id: Int!): ExpenseCategory!
-  incomeCategories(userId: String!): [IncomeCategory!]!
-  incomeCategory(id: String!): IncomeCategory!
+  incomeCategories(userId: String!): [IncomeCategoryResult!]!
+  incomeCategory(id: String!): IncomeCategoryResult!
 }
 
 input UpdateExpenseCategoryInput {
@@ -65,7 +78,4 @@ input UpdateIncomeCategoryInput {
 
   """Income Category Name"""
   name: String!
-
-  """Income Category Description"""
-  userId: String
 }
