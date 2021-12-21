@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { ExpenseCategoriesService } from './expense-categories.service';
 import { ExpenseCategory } from './entities/expense-category.entity';
 import { CreateExpenseCategoryInput } from './dto/create-expense-category.input';
@@ -25,7 +25,7 @@ export class ExpenseCategoriesResolver {
   }
 
   @Query(() => ExpenseCategoryResult, { name: 'expenseCategory' })
-  findOne(@Args('id', { type: () => Int }) id: string) {
+  findOne(@Args('id') id: string) {
     return this.expenseCategoriesService.findOne(id);
   }
 
