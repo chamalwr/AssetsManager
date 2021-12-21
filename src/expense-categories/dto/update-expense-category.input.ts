@@ -1,10 +1,8 @@
 import { CreateExpenseCategoryInput } from './create-expense-category.input';
-import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
+import { InputType, OmitType } from '@nestjs/graphql';
 
 @InputType()
-export class UpdateExpenseCategoryInput extends PartialType(
+export class UpdateExpenseCategoryInput extends OmitType(
   CreateExpenseCategoryInput,
-) {
-  @Field(() => Int)
-  id: number;
-}
+  ['userId'] as const,
+) {}

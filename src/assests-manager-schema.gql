@@ -3,8 +3,14 @@
 # ------------------------------------------------------
 
 input CreateExpenseCategoryInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  """Expense Category Description"""
+  description: String!
+
+  """Expense Category Name"""
+  name: String!
+
+  """Expense Category Owner Id"""
+  userId: String!
 }
 
 input CreateIncomeCategoryInput {
@@ -19,8 +25,30 @@ input CreateIncomeCategoryInput {
 }
 
 type ExpenseCategory {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  """Expense Category ID"""
+  _id: ID!
+
+  """Expense Category Description"""
+  description: String!
+
+  """Expense Category Name"""
+  name: String!
+
+  """Expense Category Owner Id"""
+  userId: String!
+}
+
+union ExpenseCategoryResult = ExpenseCategory | ExpenseCategoryResultError
+
+type ExpenseCategoryResultError {
+  """Error Message"""
+  message: String!
+
+  """Operation Performed"""
+  operation: String!
+
+  """Error Description"""
+  reason: String!
 }
 
 type IncomeCategory {
@@ -51,25 +79,27 @@ type IncomeCategoryResultError {
 }
 
 type Mutation {
-  createExpenseCategory(createExpenseCategoryInput: CreateExpenseCategoryInput!): ExpenseCategory!
+  createExpenseCategory(createExpenseCategoryInput: CreateExpenseCategoryInput!): ExpenseCategoryResult!
   createIncomeCategory(createIncomeCategoryInput: CreateIncomeCategoryInput!): IncomeCategoryResult!
-  removeExpenseCategory(id: Int!): ExpenseCategory!
+  removeExpenseCategory(id: String!): ExpenseCategoryResult!
   removeIncomeCategory(id: String!): IncomeCategoryResult!
-  updateExpenseCategory(updateExpenseCategoryInput: UpdateExpenseCategoryInput!): ExpenseCategory!
+  updateExpenseCategory(id: String!, updateExpenseCategoryInput: UpdateExpenseCategoryInput!): ExpenseCategoryResult!
   updateIncomeCategory(id: String!, updateIncomeCategoryInput: UpdateIncomeCategoryInput!): IncomeCategoryResult!
 }
 
 type Query {
-  expenseCategories: [ExpenseCategory!]!
-  expenseCategory(id: Int!): ExpenseCategory!
+  expenseCategories(userId: String!): [ExpenseCategoryResult!]!
+  expenseCategory(id: String!): ExpenseCategoryResult!
   incomeCategories(userId: String!): [IncomeCategoryResult!]!
   incomeCategory(id: String!): IncomeCategoryResult!
 }
 
 input UpdateExpenseCategoryInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  """Expense Category Description"""
+  description: String!
+
+  """Expense Category Name"""
+  name: String!
 }
 
 input UpdateIncomeCategoryInput {

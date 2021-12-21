@@ -1,7 +1,16 @@
-import { InputType, Int, Field } from '@nestjs/graphql';
+import { Field, InputType, OmitType } from '@nestjs/graphql';
+import { ExpenseCategory } from '../entities/expense-category.entity';
 
 @InputType()
-export class CreateExpenseCategoryInput {
-  @Field(() => Int, { description: 'Example field (placeholder)' })
-  exampleField: number;
+export class CreateExpenseCategoryInput extends OmitType(ExpenseCategory, [
+  '_id',
+] as const) {
+  @Field(() => String, { description: 'Expense Category Name' })
+  name: string;
+
+  @Field(() => String, { description: 'Expense Category Description' })
+  description: string;
+
+  @Field(() => String, { description: 'Expense Category Owner Id' })
+  userId: string;
 }
