@@ -13,6 +13,10 @@ import {
       { name: IncomeCategory.name, schema: IncomeCategorySchema },
     ]),
   ],
-  providers: [IncomeCategoriesResolver, IncomeCategoriesService, IncomeCategoriesResolver],
+  providers: [
+    IncomeCategoriesResolver,
+    IncomeCategoriesService,
+    IncomeCategoriesResolver,
+  ],
 })
 export class IncomeCategoriesModule {}
