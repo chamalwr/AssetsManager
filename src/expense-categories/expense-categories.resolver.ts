@@ -3,6 +3,7 @@ import { ExpenseCategoriesService } from './expense-categories.service';
 import { ExpenseCategory } from './entities/expense-category.entity';
 import { CreateExpenseCategoryInput } from './dto/create-expense-category.input';
 import { UpdateExpenseCategoryInput } from './dto/update-expense-category.input';
+import { ExpenseCategoryResult } from './union/expense-category-results.union';
 
 @Resolver(() => ExpenseCategory)
 export class ExpenseCategoriesResolver {
@@ -10,7 +11,7 @@ export class ExpenseCategoriesResolver {
     private readonly expenseCategoriesService: ExpenseCategoriesService,
   ) {}
 
-  @Mutation(() => ExpenseCategory)
+  @Mutation(() => ExpenseCategoryResult)
   createExpenseCategory(
     @Args('createExpenseCategoryInput')
     createExpenseCategoryInput: CreateExpenseCategoryInput,
@@ -18,29 +19,27 @@ export class ExpenseCategoriesResolver {
     return this.expenseCategoriesService.create(createExpenseCategoryInput);
   }
 
-  @Query(() => [ExpenseCategory], { name: 'expenseCategories' })
-  findAll() {
-    return this.expenseCategoriesService.findAll();
+  @Query(() => [ExpenseCategoryResult], { name: 'expenseCategories' })
+  findAll(@Args('userId') userId: string) {
+    return this.expenseCategoriesService.findAll(userId);
   }
 
-  @Query(() => ExpenseCategory, { name: 'expenseCategory' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  @Query(() => ExpenseCategoryResult, { name: 'expenseCategory' })
+  findOne(@Args('id', { type: () => Int }) id: string) {
     return this.expenseCategoriesService.findOne(id);
   }
 
-  @Mutation(() => ExpenseCategory)
+  @Mutation(() => ExpenseCategoryResult)
   updateExpenseCategory(
+    @Args('id') id: string,
     @Args('updateExpenseCategoryInput')
     updateExpenseCategoryInput: UpdateExpenseCategoryInput,
   ) {
-    return this.expenseCategoriesService.update(
-      updateExpenseCategoryInput.id,
-      updateExpenseCategoryInput,
-    );
+    return this.expenseCategoriesService.update(id, updateExpenseCategoryInput);
   }
 
-  @Mutation(() => ExpenseCategory)
-  removeExpenseCategory(@Args('id', { type: () => Int }) id: number) {
+  @Mutation(() => ExpenseCategoryResult)
+  removeExpenseCategory(@Args('id') id: string) {
     return this.expenseCategoriesService.remove(id);
   }
 }

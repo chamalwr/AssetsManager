@@ -5,6 +5,7 @@
 input CreateExpenseCategoryInput {
   """Example field (placeholder)"""
   exampleField: Int!
+  userId: String!
 }
 
 input CreateIncomeCategoryInput {
@@ -70,6 +71,7 @@ input UpdateExpenseCategoryInput {
   """Example field (placeholder)"""
   exampleField: Int
   id: Int!
+  userId: String
 }
 
 input UpdateIncomeCategoryInput {
