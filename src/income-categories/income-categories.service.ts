@@ -46,18 +46,18 @@ export class IncomeCategoriesService {
         return await this.incomeCategoryModel.find({ userId: userId });
       } else {
         this.logger.warn(`User ID ${userId} has no Categories`);
-         return {
+         return [{
           operation: "FIND_ALL",
           message: "Selected user id has no any category",
           reason: `User ID ${userId} has no Categories`
-         }
+         }]
       }
     }catch(error){
-      return {
+      return [{
         operation: "FIND_ALL",
         message: "Could not find any categories",
         reason: error
-       }
+       }]
     }
   }
 

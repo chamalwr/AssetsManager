@@ -5,7 +5,6 @@ export const IncomeCategoryResult = createUnionType({
     name: 'IncomeCategoryResult',
     types: ()=> [IncomeCategory, IncomeCategoryResultError],
     resolveType(value) {
-        console.log(value)
         if (value.name) {
             return IncomeCategory;
           }
