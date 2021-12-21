@@ -1,10 +1,10 @@
 {
-  "name": "in-manager",
+  "name": "AssestsManager",
   "version": "0.0.1",
   "description": "",
-  "author": "",
+  "author": "Chamal Weerasinghe (@chamalwr)",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "Copyrights to Chamal Weerasinghe",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",

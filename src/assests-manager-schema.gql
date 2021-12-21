@@ -1,0 +1,111 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input CreateExpenseCategoryInput {
+  """Expense Category Description"""
+  description: String!
+
+  """Expense Category Name"""
+  name: String!
+
+  """Expense Category Owner Id"""
+  userId: String!
+}
+
+input CreateIncomeCategoryInput {
+  """Income Category Description"""
+  description: String!
+
+  """Income Category Name"""
+  name: String!
+
+  """Income Category Description"""
+  userId: String!
+}
+
+type ExpenseCategory {
+  """Expense Category ID"""
+  _id: ID!
+
+  """Expense Category Description"""
+  description: String!
+
+  """Expense Category Name"""
+  name: String!
+
+  """Expense Category Owner Id"""
+  userId: String!
+}
+
+union ExpenseCategoryResult = ExpenseCategory | ExpenseCategoryResultError
+
+type ExpenseCategoryResultError {
+  """Error Message"""
+  message: String!
+
+  """Operation Performed"""
+  operation: String!
+
+  """Error Description"""
+  reason: String!
+}
+
+type IncomeCategory {
+  """Income Category ID"""
+  _id: ID!
+
+  """Income Category Description"""
+  description: String!
+
+  """Income Category Name"""
+  name: String!
+
+  """Income Category Owner Id"""
+  userId: String!
+}
+
+union IncomeCategoryResult = IncomeCategory | IncomeCategoryResultError
+
+type IncomeCategoryResultError {
+  """Error Message"""
+  message: String!
+
+  """Operation Performed"""
+  operation: String!
+
+  """Error Description"""
+  reason: String!
+}
+
+type Mutation {
+  createExpenseCategory(createExpenseCategoryInput: CreateExpenseCategoryInput!): ExpenseCategoryResult!
+  createIncomeCategory(createIncomeCategoryInput: CreateIncomeCategoryInput!): IncomeCategoryResult!
+  removeExpenseCategory(id: String!): ExpenseCategoryResult!
+  removeIncomeCategory(id: String!): IncomeCategoryResult!
+  updateExpenseCategory(id: String!, updateExpenseCategoryInput: UpdateExpenseCategoryInput!): ExpenseCategoryResult!
+  updateIncomeCategory(id: String!, updateIncomeCategoryInput: UpdateIncomeCategoryInput!): IncomeCategoryResult!
+}
+
+type Query {
+  expenseCategories(userId: String!): [ExpenseCategoryResult!]!
+  expenseCategory(id: String!): ExpenseCategoryResult!
+  incomeCategories(userId: String!): [IncomeCategoryResult!]!
+  incomeCategory(id: String!): IncomeCategoryResult!
+}
+
+input UpdateExpenseCategoryInput {
+  """Expense Category Description"""
+  description: String!
+
+  """Expense Category Name"""
+  name: String!
+}
+
+input UpdateIncomeCategoryInput {
+  """Income Category Description"""
+  description: String!
+
+  """Income Category Name"""
+  name: String!
+}
