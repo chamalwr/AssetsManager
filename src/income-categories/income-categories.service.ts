@@ -31,10 +31,11 @@ export class IncomeCategoriesService {
         reason: `Could Not Create Income Category`
        }
     }catch(error){
+      this.logger.error(`Create : ${error}`);
       return {
         operation: "CREATE",
         message: "Could Not Create Income Category",
-        reason: error
+        reason: error.message
        }
     }
   }
@@ -53,10 +54,11 @@ export class IncomeCategoriesService {
          }]
       }
     }catch(error){
+      this.logger.error(`Find All : ${error}`);
       return [{
         operation: "FIND_ALL",
         message: "Could not find any categories",
-        reason: error
+        reason: error.message
        }]
     }
   }
@@ -75,10 +77,11 @@ export class IncomeCategoriesService {
          }
       }
     }catch(error){
+      this.logger.error(`Find By Id : ${error}`);
       return {
         operation: "FIND_BY_ID",
         message: "Could not find by given ID",
-        reason: error
+        reason: error.message
        }
     }
   }
@@ -105,10 +108,11 @@ export class IncomeCategoriesService {
          }
       }
     }catch(error){
+      this.logger.error(`Update : ${error}`);
       return {
         operation: "UPDATE",
         message: "Update Failed",
-        reason: error
+        reason: error.message
        }
     }
   }
@@ -128,11 +132,11 @@ export class IncomeCategoriesService {
          }
       }
     }catch(error){
-       this.logger.error(error);
+      this.logger.error(`Remove : ${error}`);
        return {
         operation: "DELETE",
         message: "Could not delete selected income category",
-        reason: error
+        reason: error.message
        }
     }
   }
