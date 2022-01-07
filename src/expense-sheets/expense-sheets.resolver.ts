@@ -19,17 +19,17 @@ export class ExpenseSheetsResolver {
   }
 
   @Query(() => ExpenseSheet, { name: 'expenseSheet' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  findOne(@Args('id') id: string) {
     return this.expenseSheetsService.findOne(id);
   }
 
   @Mutation(() => ExpenseSheet)
-  updateExpenseSheet(@Args('updateExpenseSheetInput') updateExpenseSheetInput: UpdateExpenseSheetInput) {
-    return this.expenseSheetsService.update(updateExpenseSheetInput.id, updateExpenseSheetInput);
+  updateExpenseSheet(@Args('id') id: string, @Args('updateExpenseSheetInput') updateExpenseSheetInput: UpdateExpenseSheetInput) {
+    return this.expenseSheetsService.update(id, updateExpenseSheetInput);
   }
 
   @Mutation(() => ExpenseSheet)
-  removeExpenseSheet(@Args('id', { type: () => Int }) id: number) {
+  removeExpenseSheet(@Args('id') id: string) {
     return this.expenseSheetsService.remove(id);
   }
 }

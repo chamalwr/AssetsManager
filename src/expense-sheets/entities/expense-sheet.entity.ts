@@ -22,8 +22,8 @@ export class ExpenseSheet {
   @Prop()
   currency: string;
 
-  @Field(() => [ExpenseRecord], { description: 'Monthly Expense List' })
-  @Prop()
+  @Field(() => [ExpenseRecord], {nullable: true,  description: 'Monthly Expense List' })
+  @Prop([ExpenseRecord])
   expenseRecords: ExpenseRecord[];
 
   @Field({description: 'Owner ID which expense sheet belongs to'})

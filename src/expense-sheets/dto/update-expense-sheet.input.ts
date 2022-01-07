@@ -1,8 +1,7 @@
 import { CreateExpenseSheetInput } from './create-expense-sheet.input';
-import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
+import { InputType, OmitType } from '@nestjs/graphql';
 
 @InputType()
-export class UpdateExpenseSheetInput extends PartialType(CreateExpenseSheetInput) {
-  @Field(() => Int)
-  id: number;
+export class UpdateExpenseSheetInput extends OmitType(CreateExpenseSheetInput, ['userId'] as const) {
+  
 }

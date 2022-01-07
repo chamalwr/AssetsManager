@@ -1,6 +1,9 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { Prop, Schema } from "@nestjs/mongoose";
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { ExpenseCategory } from "src/expense-categories/entities/expense-category.entity";
+import * as mongoose from 'mongoose';
+
+export type ExpenseRecordDocument = ExpenseRecord & Document; 
 
 @ObjectType()
 @Schema()
@@ -9,7 +12,7 @@ export class ExpenseRecord {
     _id: string;
 
     @Field(() => ExpenseCategory, { description : 'Expense Category' })
-    @Prop()
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'ExpenseCategory' })
     expenseCategory: ExpenseCategory;
 
     @Field({description: 'Expense Note'})
@@ -20,3 +23,5 @@ export class ExpenseRecord {
     @Prop()
     amount: string;
 }
+
+export const ExpenseRecordSchema = SchemaFactory.createForClass(ExpenseRecord);
