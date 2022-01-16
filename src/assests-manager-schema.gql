@@ -113,6 +113,19 @@ type ExpenseSheet {
   year: Int!
 }
 
+union ExpenseSheetResult = ExpenseSheet | ExpenseSheetResultError
+
+type ExpenseSheetResultError {
+  """Error Message"""
+  message: String!
+
+  """Operation Performed"""
+  operation: String!
+
+  """Error Description"""
+  reason: String!
+}
+
 type IncomeCategory {
   """Income Category ID"""
   _id: ID!
@@ -142,21 +155,21 @@ type IncomeCategoryResultError {
 
 type Mutation {
   createExpenseCategory(createExpenseCategoryInput: CreateExpenseCategoryInput!): ExpenseCategoryResult!
-  createExpenseSheet(createExpenseSheetInput: CreateExpenseSheetInput!): ExpenseSheet!
+  createExpenseSheet(createExpenseSheetInput: CreateExpenseSheetInput!): ExpenseSheetResult!
   createIncomeCategory(createIncomeCategoryInput: CreateIncomeCategoryInput!): IncomeCategoryResult!
   removeExpenseCategory(id: String!): ExpenseCategoryResult!
-  removeExpenseSheet(id: String!): ExpenseSheet!
+  removeExpenseSheet(id: String!): ExpenseSheetResult!
   removeIncomeCategory(id: String!): IncomeCategoryResult!
   updateExpenseCategory(id: String!, updateExpenseCategoryInput: UpdateExpenseCategoryInput!): ExpenseCategoryResult!
-  updateExpenseSheet(id: String!, updateExpenseSheetInput: UpdateExpenseSheetInput!): ExpenseSheet!
+  updateExpenseSheet(id: String!, updateExpenseSheetInput: UpdateExpenseSheetInput!): ExpenseSheetResult!
   updateIncomeCategory(id: String!, updateIncomeCategoryInput: UpdateIncomeCategoryInput!): IncomeCategoryResult!
 }
 
 type Query {
   expenseCategories(userId: String!): [ExpenseCategoryResult!]!
   expenseCategory(id: String!): ExpenseCategoryResult!
-  expenseSheet(id: String!): ExpenseSheet!
-  expenseSheets(userId: String!): [ExpenseSheet!]!
+  expenseSheet(id: String!): ExpenseSheetResult!
+  expenseSheets(userId: String!): [ExpenseSheetResult!]!
   incomeCategories(userId: String!): [IncomeCategoryResult!]!
   incomeCategory(id: String!): IncomeCategoryResult!
 }
@@ -172,9 +185,6 @@ input UpdateExpenseCategoryInput {
 input UpdateExpenseSheetInput {
   """Curreny Code"""
   currency: String!
-
-  """Monthly Expense List"""
-  expenseRecords: [CreateExpenseRecordInput!]
 
   """Month Expense Sheet belongs to"""
   month: Int!

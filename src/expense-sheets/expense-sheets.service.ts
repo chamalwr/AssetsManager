@@ -11,8 +11,19 @@ export class ExpenseSheetsService {
   constructor(@InjectModel(ExpenseSheet.name) private readonly expenseSheetModel: Model<ExpenseSheetDocument>){}
   
   async create(createExpenseSheetInput: CreateExpenseSheetInput) {
-    const createdExpenseSheet = await this.expenseSheetModel.create(createExpenseSheetInput);
-    return createdExpenseSheet.save();
+    try {
+      const createdExpenseSheet = await this.expenseSheetModel.create(createExpenseSheetInput);
+      if(createdExpenseSheet){
+        return createdExpenseSheet.save();
+      }
+    }catch(error){
+      this.logger.error(error);
+      return {
+        operation: 'CREATE',
+        message: 'Could not create expense Sheet!',
+        reason: error,
+      };
+    }
   }
 
   async findAll(userId: string) {
@@ -22,9 +33,19 @@ export class ExpenseSheetsService {
         return this.expenseSheetModel.find({'userId' : userId}).populate('expenseRecords.expenseCategory');
       }else{
         this.logger.warn(`No Expense Sheets found for user id ${userId}`);
+        return [{
+          operation: 'FIND_ALL',
+          message: 'No Expense Sheets Available!',
+          reason: `Could not found any expense sheets on User ID : ${userId}`,
+        }];
       }
     }catch(error){
       this.logger.error(error);
+      return {
+        operation: 'FIND_ALL',
+        message: 'No Expense Sheets Available!',
+        reason: error,
+      };
     }
   }
 
@@ -35,8 +56,18 @@ export class ExpenseSheetsService {
         return await this.expenseSheetModel.findById(id);
       }
       this.logger.warn(`No expense Sheets found on ID ${id}`);
+      return {
+        operation: 'FIND_ALL',
+        message: 'No Expense Sheet Available!',
+        reason: `No expense sheet found on ID : ${id}`,
+      };
     }catch(error){
       this.logger.error(error);
+      return {
+        operation: 'FIND_BY_ID',
+        message: 'No Expense Sheet Available!',
+        reason: error,
+      };
     }
   }
 
@@ -51,8 +82,18 @@ export class ExpenseSheetsService {
         );
       }
       this.logger.warn(`Update failed, No expense Sheets found on ID ${id}`);
+      return {
+        operation: 'UPDATE',
+        message: 'Could Not Update Expense Sheet',
+        reason: `Update failed, No expense Sheets found on ID ${id}`,
+      };
     }catch(error){
       this.logger.error(error);
+      return {
+        operation: 'UPDATE',
+        message: 'Could Not Update Expense Sheet',
+        reason: error,
+      };
     }
   }
 
@@ -64,8 +105,18 @@ export class ExpenseSheetsService {
         return await this.expenseSheetModel.findByIdAndDelete(id);
       }
       this.logger.warn(`Delete failed, No expense Sheets found on ID ${id}`);
+      return {
+        operation: 'REMOVE',
+        message: 'Could Not Update Expense Sheet',
+        reason: `Delete failed, No expense Sheets found on ID ${id}`,
+      };
     }catch(error){
       this.logger.error(error);
+      return {
+        operation: 'REMOVE',
+        message: 'Could Not Remove Expense Sheet',
+        reason: error,
+      };
     }
   }
 }
