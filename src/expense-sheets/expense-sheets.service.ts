@@ -21,7 +21,7 @@ export class ExpenseSheetsService {
       return {
         operation: 'CREATE',
         message: 'Could not create expense Sheet!',
-        reason: error,
+        reason: error.message,
       };
     }
   }
@@ -44,7 +44,7 @@ export class ExpenseSheetsService {
       return {
         operation: 'FIND_ALL',
         message: 'No Expense Sheets Available!',
-        reason: error,
+        reason: error.message,
       };
     }
   }
@@ -66,7 +66,7 @@ export class ExpenseSheetsService {
       return {
         operation: 'FIND_BY_ID',
         message: 'No Expense Sheet Available!',
-        reason: error,
+        reason: error.message,
       };
     }
   }
@@ -92,7 +92,7 @@ export class ExpenseSheetsService {
       return {
         operation: 'UPDATE',
         message: 'Could Not Update Expense Sheet',
-        reason: error,
+        reason: error.message,
       };
     }
   }
@@ -115,7 +115,7 @@ export class ExpenseSheetsService {
       return {
         operation: 'REMOVE',
         message: 'Could Not Remove Expense Sheet',
-        reason: error,
+        reason: error.message,
       };
     }
   }
