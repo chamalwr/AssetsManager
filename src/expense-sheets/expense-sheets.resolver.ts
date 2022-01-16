@@ -14,8 +14,8 @@ export class ExpenseSheetsResolver {
   }
 
   @Query(() => [ExpenseSheet], { name: 'expenseSheets' })
-  findAll() {
-    return this.expenseSheetsService.findAll();
+  findAll(@Args('userId') userId: string) {
+    return this.expenseSheetsService.findAll(userId);
   }
 
   @Query(() => ExpenseSheet, { name: 'expenseSheet' })

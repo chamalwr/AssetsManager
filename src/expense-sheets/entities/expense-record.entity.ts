@@ -8,18 +8,18 @@ export type ExpenseRecordDocument = ExpenseRecord & Document;
 @ObjectType()
 @Schema()
 export class ExpenseRecord {
-    @Field(() => ID, { description: 'Expense Record ID' })
+    @Field(() => ID, {nullable: true, description: 'Expense Record ID' })
     _id: string;
 
-    @Field(() => ExpenseCategory, { description : 'Expense Category' })
+    @Field(() => ExpenseCategory, {nullable: true, description : 'Expense Category' })
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'ExpenseCategory' })
     expenseCategory: ExpenseCategory;
 
-    @Field({description: 'Expense Note'})
+    @Field({nullable: true, description: 'Expense Note'})
     @Prop()
     notes: string;
 
-    @Field({ description : 'Amount' })
+    @Field({nullable: true, description : 'Amount' })
     @Prop()
     amount: string;
 }

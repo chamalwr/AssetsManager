@@ -81,16 +81,16 @@ type ExpenseCategoryResultError {
 
 type ExpenseRecord {
   """Expense Record ID"""
-  _id: ID!
+  _id: ID
 
   """Amount"""
-  amount: String!
+  amount: String
 
   """Expense Category"""
-  expenseCategory: ExpenseCategory!
+  expenseCategory: ExpenseCategory
 
   """Expense Note"""
-  notes: String!
+  notes: String
 }
 
 type ExpenseSheet {
@@ -156,7 +156,7 @@ type Query {
   expenseCategories(userId: String!): [ExpenseCategoryResult!]!
   expenseCategory(id: String!): ExpenseCategoryResult!
   expenseSheet(id: String!): ExpenseSheet!
-  expenseSheets: [ExpenseSheet!]!
+  expenseSheets(userId: String!): [ExpenseSheet!]!
   incomeCategories(userId: String!): [IncomeCategoryResult!]!
   incomeCategory(id: String!): IncomeCategoryResult!
 }
