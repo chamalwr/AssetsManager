@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { ExpenseCategory } from "src/expense-categories/entities/expense-category.entity";
 import * as mongoose from 'mongoose';
@@ -10,6 +10,10 @@ export type ExpenseRecordDocument = ExpenseRecord & Document;
 export class ExpenseRecord {
     @Field(() => ID, {nullable: true, description: 'Expense Record ID' })
     _id: string;
+
+    @Field(() => Int, {nullable: true, description: 'Date that expense occured'})
+    @Prop()
+    date: number;
 
     @Field(() => ExpenseCategory, {nullable: true, description : 'Expense Category' })
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'ExpenseCategory' })

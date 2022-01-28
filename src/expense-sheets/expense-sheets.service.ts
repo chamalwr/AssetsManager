@@ -53,7 +53,7 @@ export class ExpenseSheetsService {
     try {
       const isRecordsExists = await this.expenseSheetModel.exists({ '_id' : id });
       if(isRecordsExists){
-        return await this.expenseSheetModel.findById(id);
+        return await this.expenseSheetModel.findById(id).populate('expenseRecords.expenseCategory');
       }
       this.logger.warn(`No expense Sheets found on ID ${id}`);
       return {

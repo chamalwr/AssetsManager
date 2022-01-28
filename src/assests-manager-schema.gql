@@ -17,6 +17,9 @@ input CreateExpenseRecordInput {
   """Amount"""
   amount: String!
 
+  """Date that expense occured"""
+  date: Int!
+
   """Expense Category"""
   expenseCategory: String!
 
@@ -54,16 +57,16 @@ input CreateIncomeCategoryInput {
 
 type ExpenseCategory {
   """Expense Category ID"""
-  _id: ID!
+  _id: ID
 
   """Expense Category Description"""
-  description: String!
+  description: String
 
   """Expense Category Name"""
-  name: String!
+  name: String
 
   """Expense Category Owner Id"""
-  userId: String!
+  userId: String
 }
 
 union ExpenseCategoryResult = ExpenseCategory | ExpenseCategoryResultError
@@ -85,6 +88,9 @@ type ExpenseRecord {
 
   """Amount"""
   amount: String
+
+  """Date that expense occured"""
+  date: Int
 
   """Expense Category"""
   expenseCategory: ExpenseCategory
@@ -155,12 +161,15 @@ type IncomeCategoryResultError {
 
 type Mutation {
   createExpenseCategory(createExpenseCategoryInput: CreateExpenseCategoryInput!): ExpenseCategoryResult!
+  createExpenseRecord(createExpenseRecordInput: CreateExpenseRecordInput!, expenseSheetId: String!): ExpenseRecord!
   createExpenseSheet(createExpenseSheetInput: CreateExpenseSheetInput!): ExpenseSheetResult!
   createIncomeCategory(createIncomeCategoryInput: CreateIncomeCategoryInput!): IncomeCategoryResult!
   removeExpenseCategory(id: String!): ExpenseCategoryResult!
+  removeExpenseRecord(expenseSheetId: String!, id: String!): ExpenseSheet!
   removeExpenseSheet(id: String!): ExpenseSheetResult!
   removeIncomeCategory(id: String!): IncomeCategoryResult!
   updateExpenseCategory(id: String!, updateExpenseCategoryInput: UpdateExpenseCategoryInput!): ExpenseCategoryResult!
+  updateExpenseRecord(expenseRecordId: String!, expenseSheetId: String!, updateExpenseRecordInput: UpdateExpenseRecordInput!): ExpenseSheet!
   updateExpenseSheet(id: String!, updateExpenseSheetInput: UpdateExpenseSheetInput!): ExpenseSheetResult!
   updateIncomeCategory(id: String!, updateIncomeCategoryInput: UpdateIncomeCategoryInput!): IncomeCategoryResult!
 }
@@ -168,6 +177,8 @@ type Mutation {
 type Query {
   expenseCategories(userId: String!): [ExpenseCategoryResult!]!
   expenseCategory(id: String!): ExpenseCategoryResult!
+  expenseRecord(expenseSheetId: String!, id: String!): ExpenseRecord!
+  expenseRecords(expenseSheetId: String!): [ExpenseRecord!]!
   expenseSheet(id: String!): ExpenseSheetResult!
   expenseSheets(userId: String!): [ExpenseSheetResult!]!
   incomeCategories(userId: String!): [IncomeCategoryResult!]!
@@ -176,10 +187,24 @@ type Query {
 
 input UpdateExpenseCategoryInput {
   """Expense Category Description"""
-  description: String!
+  description: String
 
   """Expense Category Name"""
-  name: String!
+  name: String
+}
+
+input UpdateExpenseRecordInput {
+  """Amount"""
+  amount: String
+
+  """Date that expense occured"""
+  date: Int
+
+  """Expense Category"""
+  expenseCategory: String
+
+  """Expense Note"""
+  notes: String
 }
 
 input UpdateExpenseSheetInput {
