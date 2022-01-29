@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { ExpenseSheetsService } from './expense-sheets.service';
 import { ExpenseSheet } from './entities/expense-sheet.entity';
 import { CreateExpenseSheetInput } from './dto/create-expense-sheet.input';
@@ -10,7 +10,10 @@ export class ExpenseSheetsResolver {
   constructor(private readonly expenseSheetsService: ExpenseSheetsService) {}
 
   @Mutation(() => ExpenseSheetResult)
-  createExpenseSheet(@Args('createExpenseSheetInput') createExpenseSheetInput: CreateExpenseSheetInput) {
+  createExpenseSheet(
+    @Args('createExpenseSheetInput')
+    createExpenseSheetInput: CreateExpenseSheetInput,
+  ) {
     return this.expenseSheetsService.create(createExpenseSheetInput);
   }
 
@@ -25,7 +28,11 @@ export class ExpenseSheetsResolver {
   }
 
   @Mutation(() => ExpenseSheetResult)
-  updateExpenseSheet(@Args('id') id: string, @Args('updateExpenseSheetInput') updateExpenseSheetInput: UpdateExpenseSheetInput) {
+  updateExpenseSheet(
+    @Args('id') id: string,
+    @Args('updateExpenseSheetInput')
+    updateExpenseSheetInput: UpdateExpenseSheetInput,
+  ) {
     return this.expenseSheetsService.update(id, updateExpenseSheetInput);
   }
 
