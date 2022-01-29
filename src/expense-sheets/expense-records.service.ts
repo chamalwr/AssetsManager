@@ -24,21 +24,49 @@ export class ExpenseRecordService {
                 return newExpenseRecord.populate('expenseCategory');
             }
             this.logger.warn(`Cannot find expense records since there is no expense sheet on ID : ${expenseSheetId}`);
+            return {
+                operation: 'CREATE',
+                message: 'Could not create expense record!',
+                reason: `Cannot find expense records since there is no expense sheet on ID : ${expenseSheetId}`,
+            };
         }catch(error){
             this.logger.error(error.message);
+            return {
+                operation: 'CREATE',
+                message: 'Could not create expense record!',
+                reason: error.message,
+            };
         }
     }
 
     async findAll(expenseSheetId: string){
-        const isExpenseSheetExists = await this.expenseSheetModel.exists({ '_id' : expenseSheetId});
-        if(isExpenseSheetExists){
-            const expenseSheet = await this.expenseSheetModel.findById(expenseSheetId).populate('expenseRecords.expenseCategory');
-            if(expenseSheet){
-                return expenseSheet.expenseRecords;
+        try {
+            const isExpenseSheetExists = await this.expenseSheetModel.exists({ '_id' : expenseSheetId});
+            if(isExpenseSheetExists){
+                const expenseSheet = await this.expenseSheetModel.findById(expenseSheetId).populate('expenseRecords.expenseCategory');
+                if(expenseSheet){
+                    return expenseSheet.expenseRecords;
+                }
+                this.logger.warn(`No expense records available on this expense sheet`);
+                return [{
+                    operation: 'FIND_ALL',
+                    message: 'There are no expense records!',
+                    reason: `No expense records available on this expense sheet on ID : ${expenseSheetId}`,
+                }];
             }
-            this.logger.warn(`No expense records available on this expense sheet`);
+            this.logger.warn(`Cannot find expense records since there are none on Expense Sheet on ID : ${expenseSheetId}`);
+            return [{
+                operation: 'FIND_ALL',
+                message: 'There are no expense records!',
+                reason: `Cannot find expense records, Since there is no Expense Sheet on ID : ${expenseSheetId}`,
+            }];
+        }catch(error){
+            return [{
+                operation: 'FIND_ALL',
+                message: 'There are no expense records!',
+                reason: error.message,
+            }];
         }
-        this.logger.warn(`Cannot find expense records since there are none on Expense Sheet on ID : ${expenseSheetId}`);
     }
 
     async findOne(expenseSheetId: string, id: string){
@@ -49,11 +77,26 @@ export class ExpenseRecordService {
                 if(expenseRecord){
                     return expenseRecord;
                 }
-                this.logger.warn(`Expense record not found on ID : ${id}`);
+                this.logger.warn(`No expense record found on ID : ${id}`);
+                return {
+                    operation: 'FIND_BY_ID',
+                    message: 'Expense record could not be found!',
+                    reason: `No expense record found on ID : ${id}`,
+                };
             }
-            this.logger.warn(`Cannot find expense record since there is none on Expense Sheet on ID : ${expenseSheetId}`);
+            this.logger.warn(`Cannot find expense record, There is none on Expense Sheet ID : ${expenseSheetId}`);
+            return {
+                operation: 'FIND_BY_ID',
+                message: 'Expense record could not be found!',
+                reason: `Cannot find expense record, There is no Expense Sheet available ID : ${expenseSheetId}`,
+            };
        }catch(error){
            this.logger.error(error.message);
+           return {
+            operation: 'FIND_BY_ID',
+            message: 'Could not create expense record!',
+            reason: error.message,
+        };
        }
     }
 
@@ -70,11 +113,26 @@ export class ExpenseRecordService {
                     );
                   return updatedSheetRecord.populate('expenseRecords.expenseCategory');
                 }
-                this.logger.warn(`Expense Record does not exists`);
+                this.logger.warn(`Update Failed, Expense record is not found on ID ${id}`);
+                return {
+                    operation: 'UPDATE',
+                    message: 'Could not update expense record!',
+                    reason: `Update Failed, Expense record is not found on ID ${id}`,
+                };
             }
             this.logger.warn(`Cannot find expense record since there is none on Expense Sheet on ID : ${expenseSheetId}`);
+            return {
+                operation: 'UPDATE',
+                message: 'Could not create expense record!',
+                reason: `Update Failed, Could not found Expense Sheet on ID ${expenseSheet}`,
+            };
         }catch(error){
             this.logger.error(error.message);
+            return {
+                operation: 'UPDATE',
+                message: 'Could not update expense record!',
+                reason: error.message,
+            };
         }
     }
 
@@ -94,12 +152,32 @@ export class ExpenseRecordService {
                         return deletedRecord.populate('expenseRecords.expenseCategory');
                     }
                     this.logger.warn(`Cannot Delete, Error Occured`)
+                    return {
+                        operation: 'DELETE',
+                        message: 'Could not remove expense record!',
+                        reason: `Delete Failed on expense record ID ${id}`,
+                    };
                 }
-                this.logger.warn(`Expense Record does not exists`);
+                this.logger.warn(`Expense Record does not exists on ID ${id}`);
+                return {
+                    operation: 'DELETE',
+                    message: 'Could not remove expense record!',
+                    reason: `Delete failed, Could not find expense record on ID ${id}`,
+                };
             }
-            this.logger.warn(`Expense Sheet Does not exists`);
+            this.logger.warn(`Expense Sheet Does not exists on ID ${expenseSheetId}`);
+            return {
+                operation: 'DELETE',
+                message: 'Could not remove expense record!',
+                reason: `Delete Failed, Could not find expense sheet on ID ${expenseSheetId}`,
+            };
        }catch(error){
            this.logger.error(error.message);
+           return {
+            operation: 'DELETE',
+            message: 'Could not remove expense record!',
+            reason: error.message,
+        };
        }
     }
 }

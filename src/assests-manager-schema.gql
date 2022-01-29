@@ -99,6 +99,19 @@ type ExpenseRecord {
   notes: String
 }
 
+union ExpenseRecordResult = ExpenseRecord | ExpenseRecordResultError | ExpenseSheet
+
+type ExpenseRecordResultError {
+  """Error Message"""
+  message: String!
+
+  """Operation Performed"""
+  operation: String!
+
+  """Error Description"""
+  reason: String!
+}
+
 type ExpenseSheet {
   """Expense Sheet ID"""
   _id: ID!
@@ -161,15 +174,15 @@ type IncomeCategoryResultError {
 
 type Mutation {
   createExpenseCategory(createExpenseCategoryInput: CreateExpenseCategoryInput!): ExpenseCategoryResult!
-  createExpenseRecord(createExpenseRecordInput: CreateExpenseRecordInput!, expenseSheetId: String!): ExpenseRecord!
+  createExpenseRecord(createExpenseRecordInput: CreateExpenseRecordInput!, expenseSheetId: String!): ExpenseRecordResult!
   createExpenseSheet(createExpenseSheetInput: CreateExpenseSheetInput!): ExpenseSheetResult!
   createIncomeCategory(createIncomeCategoryInput: CreateIncomeCategoryInput!): IncomeCategoryResult!
   removeExpenseCategory(id: String!): ExpenseCategoryResult!
-  removeExpenseRecord(expenseSheetId: String!, id: String!): ExpenseSheet!
+  removeExpenseRecord(expenseSheetId: String!, id: String!): ExpenseRecordResult!
   removeExpenseSheet(id: String!): ExpenseSheetResult!
   removeIncomeCategory(id: String!): IncomeCategoryResult!
   updateExpenseCategory(id: String!, updateExpenseCategoryInput: UpdateExpenseCategoryInput!): ExpenseCategoryResult!
-  updateExpenseRecord(expenseRecordId: String!, expenseSheetId: String!, updateExpenseRecordInput: UpdateExpenseRecordInput!): ExpenseSheet!
+  updateExpenseRecord(expenseRecordId: String!, expenseSheetId: String!, updateExpenseRecordInput: UpdateExpenseRecordInput!): ExpenseRecordResult!
   updateExpenseSheet(id: String!, updateExpenseSheetInput: UpdateExpenseSheetInput!): ExpenseSheetResult!
   updateIncomeCategory(id: String!, updateIncomeCategoryInput: UpdateIncomeCategoryInput!): IncomeCategoryResult!
 }
@@ -177,8 +190,8 @@ type Mutation {
 type Query {
   expenseCategories(userId: String!): [ExpenseCategoryResult!]!
   expenseCategory(id: String!): ExpenseCategoryResult!
-  expenseRecord(expenseSheetId: String!, id: String!): ExpenseRecord!
-  expenseRecords(expenseSheetId: String!): [ExpenseRecord!]!
+  expenseRecord(expenseSheetId: String!, id: String!): ExpenseRecordResult!
+  expenseRecords(expenseSheetId: String!): [ExpenseRecordResult!]!
   expenseSheet(id: String!): ExpenseSheetResult!
   expenseSheets(userId: String!): [ExpenseSheetResult!]!
   incomeCategories(userId: String!): [IncomeCategoryResult!]!
