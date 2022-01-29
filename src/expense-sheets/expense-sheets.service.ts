@@ -3,20 +3,28 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateExpenseSheetInput } from './dto/create-expense-sheet.input';
 import { UpdateExpenseSheetInput } from './dto/update-expense-sheet.input';
-import { ExpenseSheet, ExpenseSheetDocument } from './entities/expense-sheet.entity';
+import {
+  ExpenseSheet,
+  ExpenseSheetDocument,
+} from './entities/expense-sheet.entity';
 
 @Injectable()
 export class ExpenseSheetsService {
   private readonly logger = new Logger(ExpenseSheetsService.name);
-  constructor(@InjectModel(ExpenseSheet.name) private readonly expenseSheetModel: Model<ExpenseSheetDocument>){}
-  
+  constructor(
+    @InjectModel(ExpenseSheet.name)
+    private readonly expenseSheetModel: Model<ExpenseSheetDocument>,
+  ) {}
+
   async create(createExpenseSheetInput: CreateExpenseSheetInput) {
     try {
-      const createdExpenseSheet = await this.expenseSheetModel.create(createExpenseSheetInput);
-      if(createdExpenseSheet){
+      const createdExpenseSheet = await this.expenseSheetModel.create(
+        createExpenseSheetInput,
+      );
+      if (createdExpenseSheet) {
         return createdExpenseSheet.save();
       }
-    }catch(error){
+    } catch (error) {
       this.logger.error(error);
       return {
         operation: 'CREATE',
@@ -28,18 +36,24 @@ export class ExpenseSheetsService {
 
   async findAll(userId: string) {
     try {
-      const isRecordsExists = await this.expenseSheetModel.exists({'userId' : userId});
-      if(isRecordsExists){
-        return this.expenseSheetModel.find({'userId' : userId}).populate('expenseRecords.expenseCategory');
-      }else{
+      const isRecordsExists = await this.expenseSheetModel.exists({
+        userId: userId,
+      });
+      if (isRecordsExists) {
+        return this.expenseSheetModel
+          .find({ userId: userId })
+          .populate('expenseRecords.expenseCategory');
+      } else {
         this.logger.warn(`No Expense Sheets found for user id ${userId}`);
-        return [{
-          operation: 'FIND_ALL',
-          message: 'No Expense Sheets Available!',
-          reason: `Could not found any expense sheets on User ID : ${userId}`,
-        }];
+        return [
+          {
+            operation: 'FIND_ALL',
+            message: 'No Expense Sheets Available!',
+            reason: `Could not found any expense sheets on User ID : ${userId}`,
+          },
+        ];
       }
-    }catch(error){
+    } catch (error) {
       this.logger.error(error);
       return {
         operation: 'FIND_ALL',
@@ -51,9 +65,11 @@ export class ExpenseSheetsService {
 
   async findOne(id: string) {
     try {
-      const isRecordsExists = await this.expenseSheetModel.exists({ '_id' : id });
-      if(isRecordsExists){
-        return await this.expenseSheetModel.findById(id);
+      const isRecordsExists = await this.expenseSheetModel.exists({ _id: id });
+      if (isRecordsExists) {
+        return await this.expenseSheetModel
+          .findById(id)
+          .populate('expenseRecords.expenseCategory');
       }
       this.logger.warn(`No expense Sheets found on ID ${id}`);
       return {
@@ -61,7 +77,7 @@ export class ExpenseSheetsService {
         message: 'No Expense Sheet Available!',
         reason: `No expense sheet found on ID : ${id}`,
       };
-    }catch(error){
+    } catch (error) {
       this.logger.error(error);
       return {
         operation: 'FIND_BY_ID',
@@ -73,8 +89,8 @@ export class ExpenseSheetsService {
 
   async update(id: string, updateExpenseSheetInput: UpdateExpenseSheetInput) {
     try {
-      const isRecordsExists = await this.expenseSheetModel.exists({ '_id' : id });
-      if(isRecordsExists){
+      const isRecordsExists = await this.expenseSheetModel.exists({ _id: id });
+      if (isRecordsExists) {
         return await this.expenseSheetModel.findByIdAndUpdate(
           id,
           updateExpenseSheetInput,
@@ -87,7 +103,7 @@ export class ExpenseSheetsService {
         message: 'Could Not Update Expense Sheet',
         reason: `Update failed, No expense Sheets found on ID ${id}`,
       };
-    }catch(error){
+    } catch (error) {
       this.logger.error(error);
       return {
         operation: 'UPDATE',
@@ -99,8 +115,8 @@ export class ExpenseSheetsService {
 
   async remove(id: string) {
     try {
-      const isRecordsExists = await this.expenseSheetModel.exists({ '_id' : id });
-      if(isRecordsExists){
+      const isRecordsExists = await this.expenseSheetModel.exists({ _id: id });
+      if (isRecordsExists) {
         this.logger.log(`Income Sheet ID ${id}. is deleted`);
         return await this.expenseSheetModel.findByIdAndDelete(id);
       }
@@ -110,7 +126,7 @@ export class ExpenseSheetsService {
         message: 'Could Not Update Expense Sheet',
         reason: `Delete failed, No expense Sheets found on ID ${id}`,
       };
-    }catch(error){
+    } catch (error) {
       this.logger.error(error);
       return {
         operation: 'REMOVE',

@@ -2,7 +2,7 @@ import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ExpenseRecord } from './expense-record.entity';
 
-export type ExpenseSheetDocument = ExpenseSheet & Document; 
+export type ExpenseSheetDocument = ExpenseSheet & Document;
 
 @ObjectType()
 @Schema()
@@ -10,11 +10,11 @@ export class ExpenseSheet {
   @Field(() => ID, { description: 'Expense Sheet ID' })
   _id: string;
 
-  @Field(() => Int, {description: 'Month Expense Sheet belongs to'})
+  @Field(() => Int, { description: 'Month Expense Sheet belongs to' })
   @Prop()
   month: number;
 
-  @Field(() => Int, {description: 'Year Expense Sheet belongs to'})
+  @Field(() => Int, { description: 'Year Expense Sheet belongs to' })
   @Prop()
   year: number;
 
@@ -22,11 +22,14 @@ export class ExpenseSheet {
   @Prop()
   currency: string;
 
-  @Field(() => [ExpenseRecord], {nullable: true,  description: 'Monthly Expense List' })
+  @Field(() => [ExpenseRecord], {
+    nullable: true,
+    description: 'Monthly Expense List',
+  })
   @Prop([ExpenseRecord])
   expenseRecords: ExpenseRecord[];
 
-  @Field({description: 'Owner ID which expense sheet belongs to'})
+  @Field({ description: 'Owner ID which expense sheet belongs to' })
   @Prop()
   userId: string;
 }
