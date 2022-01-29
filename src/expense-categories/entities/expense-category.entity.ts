@@ -6,18 +6,24 @@ export type ExpenseCategoryDocument = ExpenseCategory & Document;
 @ObjectType()
 @Schema()
 export class ExpenseCategory {
-  @Field(() => ID, { description: 'Expense Category ID' })
+  @Field(() => ID, { nullable: true, description: 'Expense Category ID' })
   _id: string;
 
-  @Field(() => String, { description: 'Expense Category Name' })
+  @Field(() => String, { nullable: true, description: 'Expense Category Name' })
   @Prop()
   name: string;
 
-  @Field(() => String, { description: 'Expense Category Description' })
+  @Field(() => String, {
+    nullable: true,
+    description: 'Expense Category Description',
+  })
   @Prop()
   description: string;
 
-  @Field(() => String, { description: 'Expense Category Owner Id' })
+  @Field(() => String, {
+    nullable: true,
+    description: 'Expense Category Owner Id',
+  })
   @Prop()
   userId: string;
 }
