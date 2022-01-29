@@ -13,6 +13,37 @@ input CreateExpenseCategoryInput {
   userId: String!
 }
 
+input CreateExpenseRecordInput {
+  """Amount"""
+  amount: String!
+
+  """Date that expense occured"""
+  date: Int!
+
+  """Expense Category"""
+  expenseCategory: String!
+
+  """Expense Note"""
+  notes: String!
+}
+
+input CreateExpenseSheetInput {
+  """Curreny Code"""
+  currency: String!
+
+  """Monthly Expense List"""
+  expenseRecords: [CreateExpenseRecordInput!]
+
+  """Month Expense Sheet belongs to"""
+  month: Int!
+
+  """Owner ID which expense sheet belongs to"""
+  userId: String!
+
+  """Year Expense Sheet belongs to"""
+  year: Int!
+}
+
 input CreateIncomeCategoryInput {
   """Income Category Description"""
   description: String!
@@ -26,21 +57,84 @@ input CreateIncomeCategoryInput {
 
 type ExpenseCategory {
   """Expense Category ID"""
-  _id: ID!
+  _id: ID
 
   """Expense Category Description"""
-  description: String!
+  description: String
 
   """Expense Category Name"""
-  name: String!
+  name: String
 
   """Expense Category Owner Id"""
-  userId: String!
+  userId: String
 }
 
 union ExpenseCategoryResult = ExpenseCategory | ExpenseCategoryResultError
 
 type ExpenseCategoryResultError {
+  """Error Message"""
+  message: String!
+
+  """Operation Performed"""
+  operation: String!
+
+  """Error Description"""
+  reason: String!
+}
+
+type ExpenseRecord {
+  """Expense Record ID"""
+  _id: ID
+
+  """Amount"""
+  amount: String
+
+  """Date that expense occured"""
+  date: Int
+
+  """Expense Category"""
+  expenseCategory: ExpenseCategory
+
+  """Expense Note"""
+  notes: String
+}
+
+union ExpenseRecordResult = ExpenseRecord | ExpenseRecordResultError | ExpenseSheet
+
+type ExpenseRecordResultError {
+  """Error Message"""
+  message: String!
+
+  """Operation Performed"""
+  operation: String!
+
+  """Error Description"""
+  reason: String!
+}
+
+type ExpenseSheet {
+  """Expense Sheet ID"""
+  _id: ID!
+
+  """Curreny Code"""
+  currency: String!
+
+  """Monthly Expense List"""
+  expenseRecords: [ExpenseRecord!]
+
+  """Month Expense Sheet belongs to"""
+  month: Int!
+
+  """Owner ID which expense sheet belongs to"""
+  userId: String!
+
+  """Year Expense Sheet belongs to"""
+  year: Int!
+}
+
+union ExpenseSheetResult = ExpenseSheet | ExpenseSheetResultError
+
+type ExpenseSheetResultError {
   """Error Message"""
   message: String!
 
@@ -80,26 +174,61 @@ type IncomeCategoryResultError {
 
 type Mutation {
   createExpenseCategory(createExpenseCategoryInput: CreateExpenseCategoryInput!): ExpenseCategoryResult!
+  createExpenseRecord(createExpenseRecordInput: CreateExpenseRecordInput!, expenseSheetId: String!): ExpenseRecordResult!
+  createExpenseSheet(createExpenseSheetInput: CreateExpenseSheetInput!): ExpenseSheetResult!
   createIncomeCategory(createIncomeCategoryInput: CreateIncomeCategoryInput!): IncomeCategoryResult!
   removeExpenseCategory(id: String!): ExpenseCategoryResult!
+  removeExpenseRecord(expenseSheetId: String!, id: String!): ExpenseRecordResult!
+  removeExpenseSheet(id: String!): ExpenseSheetResult!
   removeIncomeCategory(id: String!): IncomeCategoryResult!
   updateExpenseCategory(id: String!, updateExpenseCategoryInput: UpdateExpenseCategoryInput!): ExpenseCategoryResult!
+  updateExpenseRecord(expenseRecordId: String!, expenseSheetId: String!, updateExpenseRecordInput: UpdateExpenseRecordInput!): ExpenseRecordResult!
+  updateExpenseSheet(id: String!, updateExpenseSheetInput: UpdateExpenseSheetInput!): ExpenseSheetResult!
   updateIncomeCategory(id: String!, updateIncomeCategoryInput: UpdateIncomeCategoryInput!): IncomeCategoryResult!
 }
 
 type Query {
   expenseCategories(userId: String!): [ExpenseCategoryResult!]!
   expenseCategory(id: String!): ExpenseCategoryResult!
+  expenseRecord(expenseSheetId: String!, id: String!): ExpenseRecordResult!
+  expenseRecords(expenseSheetId: String!): [ExpenseRecordResult!]!
+  expenseSheet(id: String!): ExpenseSheetResult!
+  expenseSheets(userId: String!): [ExpenseSheetResult!]!
   incomeCategories(userId: String!): [IncomeCategoryResult!]!
   incomeCategory(id: String!): IncomeCategoryResult!
 }
 
 input UpdateExpenseCategoryInput {
   """Expense Category Description"""
-  description: String!
+  description: String
 
   """Expense Category Name"""
-  name: String!
+  name: String
+}
+
+input UpdateExpenseRecordInput {
+  """Amount"""
+  amount: String
+
+  """Date that expense occured"""
+  date: Int
+
+  """Expense Category"""
+  expenseCategory: String
+
+  """Expense Note"""
+  notes: String
+}
+
+input UpdateExpenseSheetInput {
+  """Curreny Code"""
+  currency: String!
+
+  """Month Expense Sheet belongs to"""
+  month: Int!
+
+  """Year Expense Sheet belongs to"""
+  year: Int!
 }
 
 input UpdateIncomeCategoryInput {

@@ -4,6 +4,7 @@ import { ExpenseCategoriesModule } from './expense-categories/expense-categories
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ExpenseSheetsModule } from './expense-sheets/expense-sheets.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { MongooseModule } from '@nestjs/mongoose';
       sortSchema: true,
     }),
     MongooseModule.forRoot('mongodb://localhost:27017/assets-manager'),
+    ExpenseSheetsModule,
   ],
   controllers: [],
   providers: [],
