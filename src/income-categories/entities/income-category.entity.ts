@@ -13,11 +13,17 @@ export class IncomeCategory {
   @Prop()
   name: string;
 
-  @Field(() => String, { nullable: true, description: 'Income Category Description' })
+  @Field(() => String, {
+    nullable: true,
+    description: 'Income Category Description',
+  })
   @Prop()
   description: string;
 
-  @Field(() => String, { nullable: true, description: 'Income Category Owner Id' })
+  @Field(() => String, {
+    nullable: true,
+    description: 'Income Category Owner Id',
+  })
   @Prop()
   userId: string;
 }

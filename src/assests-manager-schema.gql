@@ -240,22 +240,35 @@ type IncomeSheet {
   year: Int!
 }
 
+union IncomeSheetResult = IncomeSheet | IncomeSheetResultError
+
+type IncomeSheetResultError {
+  """Error Message"""
+  message: String!
+
+  """Operation Performed"""
+  operation: String!
+
+  """Error Description"""
+  reason: String!
+}
+
 type Mutation {
   createExpenseCategory(createExpenseCategoryInput: CreateExpenseCategoryInput!): ExpenseCategoryResult!
   createExpenseRecord(createExpenseRecordInput: CreateExpenseRecordInput!, expenseSheetId: String!): ExpenseRecordResult!
   createExpenseSheet(createExpenseSheetInput: CreateExpenseSheetInput!): ExpenseSheetResult!
   createIncomeCategory(createIncomeCategoryInput: CreateIncomeCategoryInput!): IncomeCategoryResult!
-  createIncomeSheet(createIncomeSheetInput: CreateIncomeSheetInput!): IncomeSheet!
+  createIncomeSheet(createIncomeSheetInput: CreateIncomeSheetInput!): IncomeSheetResult!
   removeExpenseCategory(id: String!): ExpenseCategoryResult!
   removeExpenseRecord(expenseSheetId: String!, id: String!): ExpenseRecordResult!
   removeExpenseSheet(id: String!): ExpenseSheetResult!
   removeIncomeCategory(id: String!): IncomeCategoryResult!
-  removeIncomeSheet(id: String!): IncomeSheet!
+  removeIncomeSheet(id: String!): IncomeSheetResult!
   updateExpenseCategory(id: String!, updateExpenseCategoryInput: UpdateExpenseCategoryInput!): ExpenseCategoryResult!
   updateExpenseRecord(expenseRecordId: String!, expenseSheetId: String!, updateExpenseRecordInput: UpdateExpenseRecordInput!): ExpenseRecordResult!
   updateExpenseSheet(id: String!, updateExpenseSheetInput: UpdateExpenseSheetInput!): ExpenseSheetResult!
   updateIncomeCategory(id: String!, updateIncomeCategoryInput: UpdateIncomeCategoryInput!): IncomeCategoryResult!
-  updateIncomeSheet(id: String!, updateIncomeSheetInput: UpdateIncomeSheetInput!): IncomeSheet!
+  updateIncomeSheet(id: String!, updateIncomeSheetInput: UpdateIncomeSheetInput!): IncomeSheetResult!
 }
 
 type Query {
@@ -267,8 +280,8 @@ type Query {
   expenseSheets(userId: String!): [ExpenseSheetResult!]!
   incomeCategories(userId: String!): [IncomeCategoryResult!]!
   incomeCategory(id: String!): IncomeCategoryResult!
-  incomeSheet(id: String!): IncomeSheet!
-  incomeSheets(userId: String!): [IncomeSheet!]!
+  incomeSheet(id: String!): IncomeSheetResult!
+  incomeSheets(userId: String!): [IncomeSheetResult!]!
 }
 
 input UpdateExpenseCategoryInput {
