@@ -17,28 +17,29 @@ export class IncomeSheetsResolver {
   }
 
   @Query(() => [IncomeSheet], { name: 'incomeSheets' })
-  findAll() {
-    return this.incomeSheetsService.findAll();
+  findAll(@Args('userId') userId: string) {
+    return this.incomeSheetsService.findAll(userId);
   }
 
   @Query(() => IncomeSheet, { name: 'incomeSheet' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  findOne(@Args('id') id: string) {
     return this.incomeSheetsService.findOne(id);
   }
 
   @Mutation(() => IncomeSheet)
   updateIncomeSheet(
+    @Args('id') id: string,
     @Args('updateIncomeSheetInput')
     updateIncomeSheetInput: UpdateIncomeSheetInput,
   ) {
     return this.incomeSheetsService.update(
-      updateIncomeSheetInput.id,
+      id,
       updateIncomeSheetInput,
     );
   }
 
   @Mutation(() => IncomeSheet)
-  removeIncomeSheet(@Args('id', { type: () => Int }) id: number) {
+  removeIncomeSheet(@Args('id') id: string) {
     return this.incomeSheetsService.remove(id);
   }
 }

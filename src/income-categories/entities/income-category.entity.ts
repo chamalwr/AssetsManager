@@ -6,18 +6,18 @@ export type IncomeCategoryDocument = IncomeCategory & Document;
 @ObjectType()
 @Schema()
 export class IncomeCategory {
-  @Field(() => ID, { description: 'Income Category ID' })
+  @Field(() => ID, { nullable: true, description: 'Income Category ID' })
   _id: string;
 
-  @Field(() => String, { description: 'Income Category Name' })
+  @Field(() => String, { nullable: true, description: 'Income Category Name' })
   @Prop()
   name: string;
 
-  @Field(() => String, { description: 'Income Category Description' })
+  @Field(() => String, { nullable: true, description: 'Income Category Description' })
   @Prop()
   description: string;
 
-  @Field(() => String, { description: 'Income Category Owner Id' })
+  @Field(() => String, { nullable: true, description: 'Income Category Owner Id' })
   @Prop()
   userId: string;
 }
