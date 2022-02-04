@@ -55,6 +55,37 @@ input CreateIncomeCategoryInput {
   userId: String!
 }
 
+input CreateIncomeRecordInput {
+  """Amount"""
+  amount: String!
+
+  """Date that income record occured"""
+  date: Int!
+
+  """Income Category"""
+  incomeCategory: String!
+
+  """Income Record Note"""
+  notes: String!
+}
+
+input CreateIncomeSheetInput {
+  """Curreny Code"""
+  currency: String!
+
+  """Monthly Income List"""
+  incomeRecords: [CreateIncomeRecordInput!]
+
+  """Month Income Sheet belongs to"""
+  month: Int!
+
+  """Owner ID which Income sheet belongs to"""
+  userId: String!
+
+  """Year Income Sheet belongs to"""
+  year: Int!
+}
+
 type ExpenseCategory {
   """Expense Category ID"""
   _id: ID
@@ -147,16 +178,16 @@ type ExpenseSheetResultError {
 
 type IncomeCategory {
   """Income Category ID"""
-  _id: ID!
+  _id: ID
 
   """Income Category Description"""
-  description: String!
+  description: String
 
   """Income Category Name"""
-  name: String!
+  name: String
 
   """Income Category Owner Id"""
-  userId: String!
+  userId: String
 }
 
 union IncomeCategoryResult = IncomeCategory | IncomeCategoryResultError
@@ -172,19 +203,72 @@ type IncomeCategoryResultError {
   reason: String!
 }
 
+type IncomeRecord {
+  """Income Record ID"""
+  _id: ID
+
+  """Amount"""
+  amount: String
+
+  """Date that income occured"""
+  date: Int
+
+  """Income Category"""
+  incomeCategory: IncomeCategory
+
+  """Income Record Note"""
+  notes: String
+}
+
+type IncomeSheet {
+  """Income Sheet ID"""
+  _id: ID!
+
+  """Curreny Code"""
+  currency: String!
+
+  """Monthly Income Record List"""
+  incomeRecords: [IncomeRecord!]
+
+  """Month Income Sheet belongs to"""
+  month: Int!
+
+  """Owner ID which Income sheet belongs to"""
+  userId: String!
+
+  """Year Income Sheet belongs to"""
+  year: Int!
+}
+
+union IncomeSheetResult = IncomeSheet | IncomeSheetResultError
+
+type IncomeSheetResultError {
+  """Error Message"""
+  message: String!
+
+  """Operation Performed"""
+  operation: String!
+
+  """Error Description"""
+  reason: String!
+}
+
 type Mutation {
   createExpenseCategory(createExpenseCategoryInput: CreateExpenseCategoryInput!): ExpenseCategoryResult!
   createExpenseRecord(createExpenseRecordInput: CreateExpenseRecordInput!, expenseSheetId: String!): ExpenseRecordResult!
   createExpenseSheet(createExpenseSheetInput: CreateExpenseSheetInput!): ExpenseSheetResult!
   createIncomeCategory(createIncomeCategoryInput: CreateIncomeCategoryInput!): IncomeCategoryResult!
+  createIncomeSheet(createIncomeSheetInput: CreateIncomeSheetInput!): IncomeSheetResult!
   removeExpenseCategory(id: String!): ExpenseCategoryResult!
   removeExpenseRecord(expenseSheetId: String!, id: String!): ExpenseRecordResult!
   removeExpenseSheet(id: String!): ExpenseSheetResult!
   removeIncomeCategory(id: String!): IncomeCategoryResult!
+  removeIncomeSheet(id: String!): IncomeSheetResult!
   updateExpenseCategory(id: String!, updateExpenseCategoryInput: UpdateExpenseCategoryInput!): ExpenseCategoryResult!
   updateExpenseRecord(expenseRecordId: String!, expenseSheetId: String!, updateExpenseRecordInput: UpdateExpenseRecordInput!): ExpenseRecordResult!
   updateExpenseSheet(id: String!, updateExpenseSheetInput: UpdateExpenseSheetInput!): ExpenseSheetResult!
   updateIncomeCategory(id: String!, updateIncomeCategoryInput: UpdateIncomeCategoryInput!): IncomeCategoryResult!
+  updateIncomeSheet(id: String!, updateIncomeSheetInput: UpdateIncomeSheetInput!): IncomeSheetResult!
 }
 
 type Query {
@@ -196,6 +280,8 @@ type Query {
   expenseSheets(userId: String!): [ExpenseSheetResult!]!
   incomeCategories(userId: String!): [IncomeCategoryResult!]!
   incomeCategory(id: String!): IncomeCategoryResult!
+  incomeSheet(id: String!): IncomeSheetResult!
+  incomeSheets(userId: String!): [IncomeSheetResult!]!
 }
 
 input UpdateExpenseCategoryInput {
@@ -237,4 +323,15 @@ input UpdateIncomeCategoryInput {
 
   """Income Category Name"""
   name: String!
+}
+
+input UpdateIncomeSheetInput {
+  """Curreny Code"""
+  currency: String!
+
+  """Month Income Sheet belongs to"""
+  month: Int!
+
+  """Year Income Sheet belongs to"""
+  year: Int!
 }
