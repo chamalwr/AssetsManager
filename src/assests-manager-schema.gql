@@ -240,7 +240,7 @@ type IncomeSheet {
   year: Int!
 }
 
-union IncomeSheetResult = IncomeSheet | IncomeSheetResultError
+union IncomeSheetResult = IncomeRecord | IncomeSheet | IncomeSheetResultError
 
 type IncomeSheetResultError {
   """Error Message"""
@@ -258,16 +258,19 @@ type Mutation {
   createExpenseRecord(createExpenseRecordInput: CreateExpenseRecordInput!, expenseSheetId: String!): ExpenseRecordResult!
   createExpenseSheet(createExpenseSheetInput: CreateExpenseSheetInput!): ExpenseSheetResult!
   createIncomeCategory(createIncomeCategoryInput: CreateIncomeCategoryInput!): IncomeCategoryResult!
+  createIncomeRecord(createIncomeRecordInput: CreateIncomeRecordInput!, incomeSheetId: String!): IncomeSheetResult!
   createIncomeSheet(createIncomeSheetInput: CreateIncomeSheetInput!): IncomeSheetResult!
   removeExpenseCategory(id: String!): ExpenseCategoryResult!
   removeExpenseRecord(expenseSheetId: String!, id: String!): ExpenseRecordResult!
   removeExpenseSheet(id: String!): ExpenseSheetResult!
   removeIncomeCategory(id: String!): IncomeCategoryResult!
+  removeIncomeRecord(id: String!, incomeSheetId: String!): IncomeSheetResult!
   removeIncomeSheet(id: String!): IncomeSheetResult!
   updateExpenseCategory(id: String!, updateExpenseCategoryInput: UpdateExpenseCategoryInput!): ExpenseCategoryResult!
   updateExpenseRecord(expenseRecordId: String!, expenseSheetId: String!, updateExpenseRecordInput: UpdateExpenseRecordInput!): ExpenseRecordResult!
   updateExpenseSheet(id: String!, updateExpenseSheetInput: UpdateExpenseSheetInput!): ExpenseSheetResult!
   updateIncomeCategory(id: String!, updateIncomeCategoryInput: UpdateIncomeCategoryInput!): IncomeCategoryResult!
+  updateIncomeRecord(incomeRecordId: String!, incomeSheetId: String!, updateIncomeRecordInput: UpdateIncomeRecordInput!): IncomeSheetResult!
   updateIncomeSheet(id: String!, updateIncomeSheetInput: UpdateIncomeSheetInput!): IncomeSheetResult!
 }
 
@@ -280,6 +283,8 @@ type Query {
   expenseSheets(userId: String!): [ExpenseSheetResult!]!
   incomeCategories(userId: String!): [IncomeCategoryResult!]!
   incomeCategory(id: String!): IncomeCategoryResult!
+  incomeRecord(id: String!, incomeSheetId: String!): IncomeSheetResult!
+  incomeRecords(incomeSheetId: String!): [IncomeSheetResult!]!
   incomeSheet(id: String!): IncomeSheetResult!
   incomeSheets(userId: String!): [IncomeSheetResult!]!
 }
@@ -323,6 +328,20 @@ input UpdateIncomeCategoryInput {
 
   """Income Category Name"""
   name: String!
+}
+
+input UpdateIncomeRecordInput {
+  """Amount"""
+  amount: String
+
+  """Date that income record occured"""
+  date: Int
+
+  """Income Category"""
+  incomeCategory: String
+
+  """Income Record Note"""
+  notes: String
 }
 
 input UpdateIncomeSheetInput {
