@@ -5,6 +5,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ExpenseSheetsModule } from './expense-sheets/expense-sheets.module';
+import { IncomeSheetsModule } from './income-sheets/income-sheets.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ExpenseSheetsModule } from './expense-sheets/expense-sheets.module';
     }),
     MongooseModule.forRoot('mongodb://localhost:27017/assets-manager'),
     ExpenseSheetsModule,
+    IncomeSheetsModule,
   ],
   controllers: [],
   providers: [],
