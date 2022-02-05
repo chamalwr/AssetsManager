@@ -1,12 +1,17 @@
 import { createUnionType, Field, ObjectType } from '@nestjs/graphql';
+import { IncomeRecord } from '../entities/income-record.entity';
 import { IncomeSheet } from '../entities/income-sheet.entity';
 
 export const IncomeSheetResult = createUnionType({
   name: 'IncomeSheetResult',
-  types: () => [IncomeSheet, IncomeSheetResultError],
+  types: () => [IncomeSheet, IncomeRecord, IncomeSheetResultError],
   resolveType(value) {
     if (value.month || value.year) {
       return IncomeSheet;
+    }
+
+    if (value.date) {
+      return IncomeRecord;
     }
 
     if (value.message) {

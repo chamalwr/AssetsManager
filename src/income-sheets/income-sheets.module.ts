@@ -7,6 +7,8 @@ import {
   IncomeRecordSchema,
 } from './entities/income-record.entity';
 import { IncomeSheet, IncomeSheetSchema } from './entities/income-sheet.entity';
+import { IncomeRecordResolver } from './income-records.resolver';
+import { IncomeRecordService } from './income-records.service';
 
 @Module({
   imports: [
@@ -15,6 +17,11 @@ import { IncomeSheet, IncomeSheetSchema } from './entities/income-sheet.entity';
       { name: IncomeSheet.name, schema: IncomeSheetSchema },
     ]),
   ],
-  providers: [IncomeSheetsResolver, IncomeSheetsService],
+  providers: [
+    IncomeSheetsResolver,
+    IncomeSheetsService,
+    IncomeRecordResolver,
+    IncomeRecordService,
+  ],
 })
 export class IncomeSheetsModule {}
