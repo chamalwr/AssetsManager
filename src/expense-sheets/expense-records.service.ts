@@ -101,7 +101,10 @@ export class ExpenseRecordService {
     }
   }
 
-  async findOne(expenseSheetId: string, id: string): Promise<ExpenseRecord | ExpenseRecordResultError> {
+  async findOne(
+    expenseSheetId: string,
+    id: string,
+  ): Promise<ExpenseRecord | ExpenseRecordResultError> {
     try {
       const expenseSheet = await this.expenseSheetModel
         .findById(expenseSheetId)
@@ -148,11 +151,15 @@ export class ExpenseRecordService {
         expenseSheetId,
       );
       if (expenseSheet) {
-        const expenseRecord: ExpenseSheet = await this.expenseSheetModel.findOne({
-          'expenseRecords._id': id,
-        });
+        const expenseRecord: ExpenseSheet =
+          await this.expenseSheetModel.findOne({
+            'expenseRecords._id': id,
+          });
         if (expenseRecord) {
-          const selectedExpenseRecord: any = await this.findOne(expenseSheetId, id);
+          const selectedExpenseRecord: any = await this.findOne(
+            expenseSheetId,
+            id,
+          );
           expenseSheet.totalAmount -= selectedExpenseRecord.amount;
           await expenseSheet.save();
           const updatedSheetRecord =
@@ -162,7 +169,7 @@ export class ExpenseRecordService {
               { new: true, upsert: false },
             );
           expenseSheet.totalAmount += updateExpenseRecordInput.amount;
-          await expenseSheet.save()
+          await expenseSheet.save();
           return updatedSheetRecord.populate('expenseRecords.expenseCategory');
         }
         this.logger.warn(
@@ -202,7 +209,10 @@ export class ExpenseRecordService {
           'expenseRecords._id': id,
         });
         if (expenseRecord) {
-          const selectedExpenseRecord: any = await this.findOne(expenseSheetId, id);
+          const selectedExpenseRecord: any = await this.findOne(
+            expenseSheetId,
+            id,
+          );
           expenseSheet.totalAmount -= selectedExpenseRecord.amount;
           const deletedRecord = await this.expenseSheetModel.findOneAndUpdate(
             { _id: expenseSheetId },

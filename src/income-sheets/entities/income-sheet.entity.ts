@@ -29,6 +29,10 @@ export class IncomeSheet {
   @Prop([IncomeRecord])
   incomeRecords: IncomeRecord[];
 
+  @Field(() => Number, { defaultValue: 0.0 })
+  @Prop()
+  totalAmount: number;
+
   @Field({ description: 'Owner ID which Income sheet belongs to' })
   @Prop()
   userId: string;

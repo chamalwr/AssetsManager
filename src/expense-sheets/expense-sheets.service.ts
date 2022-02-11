@@ -23,7 +23,10 @@ export class ExpenseSheetsService {
         createExpenseSheetInput,
       );
       if (createdExpenseSheet) {
-        createdExpenseSheet.totalAmount = ExpenseSheetUtil.calculateTotalExpenses(createdExpenseSheet.expenseRecords);
+        createdExpenseSheet.totalAmount =
+          ExpenseSheetUtil.calculateTotalExpenses(
+            createdExpenseSheet.expenseRecords,
+          );
         return createdExpenseSheet.save();
       }
     } catch (error) {

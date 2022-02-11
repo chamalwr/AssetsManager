@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { IncomeSheetUtil } from 'src/util/income-sheet.util';
 import { CreateIncomeSheetInput } from './dto/create-income-sheet.input';
 import { UpdateIncomeSheetInput } from './dto/update-income-sheet.input';
 import {
@@ -21,8 +22,11 @@ export class IncomeSheetsService {
       const createdIncomeSheet = await this.incomeSheetModel.create(
         createIncomeSheetInput,
       );
-      createdIncomeSheet.save();
       if (createIncomeSheetInput) {
+        createdIncomeSheet.totalAmount = IncomeSheetUtil.calculateTotalIncome(
+          createdIncomeSheet.incomeRecords,
+        );
+        createdIncomeSheet.save();
         return createdIncomeSheet.populate('incomeRecords.incomeCategory');
       }
       this.logger.warn(

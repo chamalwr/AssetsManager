@@ -34,6 +34,7 @@ export class IncomeRecordService {
           createIncomeRecordInput,
         );
         incomeSheet.incomeRecords.push(incomeRecord);
+        incomeSheet.totalAmount += incomeRecord.amount;
         await incomeSheet.save();
         return incomeSheet.populate('incomeRecords.incomeCategory');
       }
@@ -131,12 +132,20 @@ export class IncomeRecordService {
           'incomeRecords._id': id,
         });
         if (incomeRecord) {
+          const selectedIncomeRecord: any = await this.findOne(
+            incomeSheetId,
+            id,
+          );
+          incomeSheet.totalAmount -= selectedIncomeRecord.amount;
+          await incomeSheet.save();
           const updatedSheetRecord =
             await this.incomeSheetModel.findOneAndUpdate(
               { 'incomeRecords._id': id },
               { $set: { 'incomeRecords.$': updateIncomeRecordInput } },
               { new: true, upsert: false },
             );
+          incomeSheet.totalAmount += updateIncomeRecordInput.amount;
+          await incomeSheet.save();
           return updatedSheetRecord.populate('incomeRecords.incomeCategory');
         }
         this.logger.warn(
@@ -168,14 +177,19 @@ export class IncomeRecordService {
 
   async remove(incomeSheetId: string, id: string) {
     try {
-      const isIncomeSheetExists = await this.incomeSheetModel.exists({
+      const incomeSheet = await this.incomeSheetModel.findById({
         _id: incomeSheetId,
       });
-      if (isIncomeSheetExists) {
+      if (incomeSheet) {
         const incomeRecord = await this.incomeSheetModel.findOne({
           'incomeRecords._id': id,
         });
         if (incomeRecord) {
+          const selectedIncomeRecord: any = await this.findOne(
+            incomeSheetId,
+            id,
+          );
+          incomeSheet.totalAmount -= selectedIncomeRecord.amount;
           const deletedRecord = await this.incomeSheetModel.findOneAndUpdate(
             { _id: incomeSheetId },
             { $pull: { incomeRecords: { _id: id } } },
@@ -183,7 +197,8 @@ export class IncomeRecordService {
           );
 
           if (deletedRecord) {
-            return deletedRecord.populate('incomeRecords.incomeCategory');
+            await incomeSheet.save();
+            return incomeSheet.populate('incomeRecords.incomeCategory');
           }
           this.logger.warn(`Cannot Delete, Error Occured`);
           return {

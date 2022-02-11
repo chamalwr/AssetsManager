@@ -57,7 +57,7 @@ input CreateIncomeCategoryInput {
 
 input CreateIncomeRecordInput {
   """Amount"""
-  amount: String!
+  amount: Float!
 
   """Date that income record occured"""
   date: Int!
@@ -211,7 +211,7 @@ type IncomeRecord {
   _id: ID
 
   """Amount"""
-  amount: String
+  amount: Float
 
   """Date that income occured"""
   date: Int
@@ -235,6 +235,7 @@ type IncomeSheet {
 
   """Month Income Sheet belongs to"""
   month: Int!
+  totalAmount: Float!
 
   """Owner ID which Income sheet belongs to"""
   userId: String!
@@ -335,7 +336,7 @@ input UpdateIncomeCategoryInput {
 
 input UpdateIncomeRecordInput {
   """Amount"""
-  amount: String
+  amount: Float
 
   """Date that income record occured"""
   date: Int
