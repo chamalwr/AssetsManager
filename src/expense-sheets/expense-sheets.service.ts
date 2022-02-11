@@ -92,6 +92,64 @@ export class ExpenseSheetsService {
     }
   }
 
+  async findByMonthAndYear(userId: string, month: number, year: number) {
+    try {
+      const expenseSheet = await this.expenseSheetModel.findOne({
+        $and: [{ userId: userId }, { month: month }, { year: year }],
+      });
+      if (expenseSheet) {
+        return expenseSheet.populate('expenseRecords.expenseCategory');
+      }
+      this.logger.warn(
+        `User ID : ${userId} , Month: ${month}, Year: ${year} has no any expense sheets available`,
+      );
+      return {
+        operation: 'FIND_BY_MONTH_AND_YEAR',
+        message: 'Could Not Get Expense Sheet',
+        reason: `User ID : ${userId} , Month: ${month}, Year: ${year} has no any expense sheets available`,
+      };
+    } catch (error) {
+      this.logger.error(error);
+      return {
+        operation: 'FIND_BY_MONTH_AND_YEAR',
+        message: 'Could Not Get Expense Sheet',
+        reason: error.message,
+      };
+    }
+  }
+
+  async findByYear(userId: string, year: number) {
+    try {
+      const expenseSheets = await this.expenseSheetModel
+        .find({
+          $and: [{ userId: userId }, { year: year }],
+        })
+        .populate('expenseRecords.expenseCategory');
+      if (expenseSheets.length > 0) {
+        return expenseSheets;
+      }
+      this.logger.warn(
+        `User ID : ${userId} or Year of : ${year} has no any expense sheets available`,
+      );
+      return [
+        {
+          operation: 'FIND_BY_YEAR',
+          message: 'Could Not Get Expense Sheets',
+          reason: `User ID : ${userId} or Year of : ${year} has no any expense sheets available`,
+        },
+      ];
+    } catch (error) {
+      this.logger.error(error);
+      return [
+        {
+          operation: 'FIND_BY_YEAR',
+          message: 'Could Not Get Expense Sheets',
+          reason: error.message,
+        },
+      ];
+    }
+  }
+
   async update(id: string, updateExpenseSheetInput: UpdateExpenseSheetInput) {
     try {
       const isRecordsExists = await this.expenseSheetModel.exists({ _id: id });

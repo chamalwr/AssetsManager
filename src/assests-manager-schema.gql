@@ -285,6 +285,8 @@ type Query {
   expenseRecords(expenseSheetId: String!): [ExpenseRecordResult!]!
   expenseSheet(id: String!): ExpenseSheetResult!
   expenseSheets(userId: String!): [ExpenseSheetResult!]!
+  expeseSheetByMonthAndYear(month: Float!, userId: String!, year: Float!): ExpenseSheetResult!
+  expeseSheetsByYear(userId: String!, year: Float!): [ExpenseSheetResult!]!
   incomeCategories(userId: String!): [IncomeCategoryResult!]!
   incomeCategory(id: String!): IncomeCategoryResult!
   incomeRecord(id: String!, incomeSheetId: String!): IncomeSheetResult!

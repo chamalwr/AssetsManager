@@ -27,6 +27,23 @@ export class ExpenseSheetsResolver {
     return this.expenseSheetsService.findOne(id);
   }
 
+  @Query(() => ExpenseSheetResult, { name: 'expeseSheetByMonthAndYear' })
+  getExpenseSheetByMonthAndYear(
+    @Args('userId') userId: string,
+    @Args('month') month: number,
+    @Args('year') year: number,
+  ) {
+    return this.expenseSheetsService.findByMonthAndYear(userId, month, year);
+  }
+
+  @Query(() => [ExpenseSheetResult], { name: 'expeseSheetsByYear' })
+  getExpenseSheetByYear(
+    @Args('userId') userId: string,
+    @Args('year') year: number,
+  ) {
+    return this.expenseSheetsService.findByYear(userId, year);
+  }
+
   @Mutation(() => ExpenseSheetResult)
   updateExpenseSheet(
     @Args('id') id: string,
