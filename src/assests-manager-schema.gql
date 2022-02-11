@@ -292,7 +292,9 @@ type Query {
   incomeRecord(id: String!, incomeSheetId: String!): IncomeSheetResult!
   incomeRecords(incomeSheetId: String!): [IncomeSheetResult!]!
   incomeSheet(id: String!): IncomeSheetResult!
+  incomeSheetByMonthAndYear(month: Float!, userId: String!, year: Float!): IncomeSheetResult!
   incomeSheets(userId: String!): [IncomeSheetResult!]!
+  incomeSheetsByYear(userId: String!, year: Float!): [IncomeSheetResult!]!
 }
 
 input UpdateExpenseCategoryInput {

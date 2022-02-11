@@ -103,6 +103,64 @@ export class IncomeSheetsService {
     }
   }
 
+  async findByYear(userId: string, year: number) {
+    try {
+      const incomeSheets = await this.incomeSheetModel
+        .find({
+          $and: [{ userId: userId }, { year: year }],
+        })
+        .populate('incomeRecords.incomeCategory');
+      if (incomeSheets.length > 0) {
+        return incomeSheets;
+      }
+      this.logger.warn(
+        `User ID : ${userId} or Year of : ${year} has no any income sheets available`,
+      );
+      return [
+        {
+          operation: 'FIND_BY_YEAR',
+          message: 'No Income Sheets Available',
+          reason: `User ID : ${userId} or Year of : ${year} has no any income sheets available`,
+        },
+      ];
+    } catch (error) {
+      this.logger.error(error);
+      return [
+        {
+          operation: 'FIND_BY_YEAR',
+          message: 'No Income Sheets Available!',
+          reason: error.message,
+        },
+      ];
+    }
+  }
+
+  async findByMonthAndYear(userId: string, month: number, year: number) {
+    try {
+      const incomeSheet = await this.incomeSheetModel.findOne({
+        $and: [{ userId: userId }, { month: month }, { year: year }],
+      });
+      if (incomeSheet) {
+        return incomeSheet.populate('incomeRecords.incomeCategory');
+      }
+      this.logger.warn(
+        `User ID : ${userId} , Month: ${month}, Year: ${year} has no any income sheets available`,
+      );
+      return {
+        operation: 'FIND_BY_MONTH_AND_YEAR',
+        message: 'No Income Sheet Available',
+        reason: `User ID : ${userId} , Month: ${month}, Year: ${year} has no any income sheets available`,
+      };
+    } catch (error) {
+      this.logger.error(error);
+      return {
+        operation: 'FIND_BY_MONTH_AND_YEAR',
+        message: 'No Income Sheet Available!',
+        reason: error.message,
+      };
+    }
+  }
+
   async update(id: string, updateIncomeSheetInput: UpdateIncomeSheetInput) {
     try {
       const isSheetExsists = await this.incomeSheetModel.exists({ _id: id });

@@ -27,6 +27,23 @@ export class IncomeSheetsResolver {
     return this.incomeSheetsService.findOne(id);
   }
 
+  @Query(() => IncomeSheetResult, { name: 'incomeSheetByMonthAndYear' })
+  getIncomeSheetByMonthAndYear(
+    @Args('userId') userId: string,
+    @Args('month') month: number,
+    @Args('year') year: number,
+  ) {
+    return this.incomeSheetsService.findByMonthAndYear(userId, month, year);
+  }
+
+  @Query(() => [IncomeSheetResult], { name: 'incomeSheetsByYear' })
+  getIncomeSheetByYear(
+    @Args('userId') userId: string,
+    @Args('year') year: number,
+  ) {
+    return this.incomeSheetsService.findByYear(userId, year);
+  }
+
   @Mutation(() => IncomeSheetResult)
   updateIncomeSheet(
     @Args('id') id: string,
