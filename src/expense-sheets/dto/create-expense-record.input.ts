@@ -11,6 +11,6 @@ export class CreateExpenseRecordInput {
   @Field({ description: 'Expense Note' })
   notes: string;
 
-  @Field({ description: 'Amount' })
-  amount: string;
+  @Field(() => Number, { description: 'Amount' })
+  amount: number;
 }

@@ -12,6 +12,7 @@ import {
   ExpenseRecord,
   ExpenseRecordDocument,
 } from './entities/expense-record.entity';
+import { ExpenseRecordResultError } from './union/expense-record-results.union';
 
 @Injectable()
 export class ExpenseRecordService {
@@ -36,6 +37,7 @@ export class ExpenseRecordService {
           createExpenseRecordInput,
         );
         expenseSheet.expenseRecords.push(newExpenseRecord);
+        expenseSheet.totalAmount += newExpenseRecord.amount;
         await expenseSheet.save();
         return newExpenseRecord.populate('expenseCategory');
       }
@@ -99,7 +101,7 @@ export class ExpenseRecordService {
     }
   }
 
-  async findOne(expenseSheetId: string, id: string) {
+  async findOne(expenseSheetId: string, id: string): Promise<ExpenseRecord | ExpenseRecordResultError> {
     try {
       const expenseSheet = await this.expenseSheetModel
         .findById(expenseSheetId)
@@ -146,16 +148,21 @@ export class ExpenseRecordService {
         expenseSheetId,
       );
       if (expenseSheet) {
-        const expenseRecord = await this.expenseSheetModel.findOne({
+        const expenseRecord: ExpenseSheet = await this.expenseSheetModel.findOne({
           'expenseRecords._id': id,
         });
         if (expenseRecord) {
+          const selectedExpenseRecord: any = await this.findOne(expenseSheetId, id);
+          expenseSheet.totalAmount -= selectedExpenseRecord.amount;
+          await expenseSheet.save();
           const updatedSheetRecord =
             await this.expenseSheetModel.findOneAndUpdate(
               { 'expenseRecords._id': id },
               { $set: { 'expenseRecords.$': updateExpenseRecordInput } },
               { new: true, upsert: false },
             );
+          expenseSheet.totalAmount += updateExpenseRecordInput.amount;
+          await expenseSheet.save()
           return updatedSheetRecord.populate('expenseRecords.expenseCategory');
         }
         this.logger.warn(
@@ -187,14 +194,16 @@ export class ExpenseRecordService {
 
   async remove(expenseSheetId: string, id: string) {
     try {
-      const isExpenseSheetExists = await this.expenseSheetModel.exists({
+      const expenseSheet = await this.expenseSheetModel.findOne({
         _id: expenseSheetId,
       });
-      if (isExpenseSheetExists) {
+      if (expenseSheet) {
         const expenseRecord = await this.expenseSheetModel.findOne({
           'expenseRecords._id': id,
         });
         if (expenseRecord) {
+          const selectedExpenseRecord: any = await this.findOne(expenseSheetId, id);
+          expenseSheet.totalAmount -= selectedExpenseRecord.amount;
           const deletedRecord = await this.expenseSheetModel.findOneAndUpdate(
             { _id: expenseSheetId },
             { $pull: { expenseRecords: { _id: id } } },
@@ -202,6 +211,7 @@ export class ExpenseRecordService {
           );
 
           if (deletedRecord) {
+            await expenseSheet.save();
             return deletedRecord.populate('expenseRecords.expenseCategory');
           }
           this.logger.warn(`Cannot Delete, Error Occured`);

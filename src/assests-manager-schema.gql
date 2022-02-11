@@ -15,7 +15,7 @@ input CreateExpenseCategoryInput {
 
 input CreateExpenseRecordInput {
   """Amount"""
-  amount: String!
+  amount: Float!
 
   """Date that expense occured"""
   date: Int!
@@ -118,7 +118,7 @@ type ExpenseRecord {
   _id: ID
 
   """Amount"""
-  amount: String
+  amount: Float
 
   """Date that expense occured"""
   date: Int
@@ -155,6 +155,9 @@ type ExpenseSheet {
 
   """Month Expense Sheet belongs to"""
   month: Int!
+
+  """Total amount spent"""
+  totalAmount: Float!
 
   """Owner ID which expense sheet belongs to"""
   userId: String!
@@ -299,7 +302,7 @@ input UpdateExpenseCategoryInput {
 
 input UpdateExpenseRecordInput {
   """Amount"""
-  amount: String
+  amount: Float
 
   """Date that expense occured"""
   date: Int

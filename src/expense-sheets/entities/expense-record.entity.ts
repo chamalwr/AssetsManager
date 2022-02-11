@@ -29,9 +29,9 @@ export class ExpenseRecord {
   @Prop()
   notes: string;
 
-  @Field({ nullable: true, description: 'Amount' })
+  @Field(() => Number, { nullable: true, description: 'Amount' })
   @Prop()
-  amount: string;
+  amount: number;
 }
 
 export const ExpenseRecordSchema = SchemaFactory.createForClass(ExpenseRecord);

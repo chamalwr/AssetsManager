@@ -7,6 +7,7 @@ import {
   ExpenseSheet,
   ExpenseSheetDocument,
 } from './entities/expense-sheet.entity';
+import { ExpenseSheetUtil } from '../util/expense-sheet.util';
 
 @Injectable()
 export class ExpenseSheetsService {
@@ -22,6 +23,7 @@ export class ExpenseSheetsService {
         createExpenseSheetInput,
       );
       if (createdExpenseSheet) {
+        createdExpenseSheet.totalAmount = ExpenseSheetUtil.calculateTotalExpenses(createdExpenseSheet.expenseRecords);
         return createdExpenseSheet.save();
       }
     } catch (error) {
