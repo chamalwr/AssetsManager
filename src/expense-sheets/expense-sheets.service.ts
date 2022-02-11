@@ -19,16 +19,40 @@ export class ExpenseSheetsService {
 
   async create(createExpenseSheetInput: CreateExpenseSheetInput) {
     try {
-      const createdExpenseSheet = await this.expenseSheetModel.create(
-        createExpenseSheetInput,
-      );
-      if (createdExpenseSheet) {
-        createdExpenseSheet.totalAmount =
-          ExpenseSheetUtil.calculateTotalExpenses(
-            createdExpenseSheet.expenseRecords,
-          );
-        return createdExpenseSheet.save();
+      const isExpenseSheetExsists = await this.expenseSheetModel.findOne({
+        $and: [
+          { userId: createExpenseSheetInput.userId },
+          { month: createExpenseSheetInput.month },
+        ],
+      });
+      if (!isExpenseSheetExsists) {
+        const createdExpenseSheet = await this.expenseSheetModel.create(
+          createExpenseSheetInput,
+        );
+        if (createdExpenseSheet) {
+          createdExpenseSheet.totalAmount =
+            ExpenseSheetUtil.calculateTotalExpenses(
+              createdExpenseSheet.expenseRecords,
+            );
+          return createdExpenseSheet.save();
+        }
+        this.logger.warn(
+          `Unable to create income sheet : ${createExpenseSheetInput}`,
+        );
+        return {
+          operation: 'CREATE',
+          message: 'Could not create expense Sheet!',
+          reason: `Unable to create income sheet : ${createExpenseSheetInput}`,
+        };
       }
+      this.logger.warn(
+        `Selected user already has an Income Sheet for ${createExpenseSheetInput.month}th month`,
+      );
+      return {
+        operation: 'CREATE',
+        message: 'Could not create expense Sheet!',
+        reason: `Selected user already has an Income Sheet for ${createExpenseSheetInput.month}th month`,
+      };
     } catch (error) {
       this.logger.error(error);
       return {
