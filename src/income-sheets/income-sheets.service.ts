@@ -19,26 +19,42 @@ export class IncomeSheetsService {
 
   async create(createIncomeSheetInput: CreateIncomeSheetInput) {
     try {
-      const createdIncomeSheet = await this.incomeSheetModel.create(
-        createIncomeSheetInput,
-      );
-      if (createIncomeSheetInput) {
-        createdIncomeSheet.totalAmount = IncomeSheetUtil.calculateTotalIncome(
-          createdIncomeSheet.incomeRecords,
+      const isIncomeSheetExsists = await this.incomeSheetModel.findOne({
+        $and: [
+          { userId: createIncomeSheetInput.userId },
+          { month: createIncomeSheetInput.month },
+        ],
+      });
+      if (!isIncomeSheetExsists) {
+        const createdIncomeSheet = await this.incomeSheetModel.create(
+          createIncomeSheetInput,
         );
-        createdIncomeSheet.save();
-        return createdIncomeSheet.populate('incomeRecords.incomeCategory');
+        if (createIncomeSheetInput) {
+          createdIncomeSheet.totalAmount = IncomeSheetUtil.calculateTotalIncome(
+            createdIncomeSheet.incomeRecords,
+          );
+          createdIncomeSheet.save();
+          return createdIncomeSheet.populate('incomeRecords.incomeCategory');
+        }
+        this.logger.warn(
+          `Unable to create income sheet : ${createIncomeSheetInput}`,
+        );
+        return {
+          operation: 'CREATE',
+          message: 'Could not create income sheet',
+          reason: `Unable to create income sheet : ${createIncomeSheetInput}`,
+        };
       }
       this.logger.warn(
-        `Unable to create income sheet : ${createIncomeSheetInput}`,
+        `Selected user already has an Income Sheet for ${createIncomeSheetInput.month}th month`,
       );
       return {
         operation: 'CREATE',
         message: 'Could not create income sheet',
-        reason: `Unable to create income sheet : ${createIncomeSheetInput}`,
+        reason: `Selected user already has an Income Sheet for ${createIncomeSheetInput.month}th month, Cannot Create Duplicate Income Sheets`,
       };
     } catch (error) {
-      this.logger.error(error.message);
+      this.logger.error(error);
       return {
         operation: 'CREATE',
         message: 'Could not create income sheet!',
