@@ -6,10 +6,10 @@ export const ExpenseCategoryResult = createUnionType({
   types: () => [ExpenseCategory, ExpenseCategoryResultError],
   resolveType(value) {
     if (value.name) {
-      return ExpenseCategory;
+      return 'ExpenseCategory';
     }
     if (value.reason) {
-      return ExpenseCategoryResultError;
+      return 'ExpenseCategoryResultError';
     }
     return null;
   },
