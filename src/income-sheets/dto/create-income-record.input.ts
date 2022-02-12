@@ -11,6 +11,6 @@ export class CreateIncomeRecordInput {
   @Field({ description: 'Income Record Note' })
   notes: string;
 
-  @Field({ description: 'Amount' })
-  amount: string;
+  @Field(() => Number, { description: 'Amount' })
+  amount: number;
 }
