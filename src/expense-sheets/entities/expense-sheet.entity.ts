@@ -29,6 +29,10 @@ export class ExpenseSheet {
   @Prop([ExpenseRecord])
   expenseRecords: ExpenseRecord[];
 
+  @Field(() => Number, { description: 'Total amount spent' })
+  @Prop()
+  totalAmount: number;
+
   @Field({ description: 'Owner ID which expense sheet belongs to' })
   @Prop()
   userId: string;
