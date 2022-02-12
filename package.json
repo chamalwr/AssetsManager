@@ -1,6 +1,6 @@
 {
-  "name": "AssestsManager",
-  "version": "0.0.1",
+  "name": "assets-manager",
+  "version": "0.8.0",
   "description": "",
   "author": "Chamal Weerasinghe (@chamalwr)",
   "private": true,
