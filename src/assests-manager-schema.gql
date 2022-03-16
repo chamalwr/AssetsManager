@@ -235,6 +235,8 @@ type IncomeSheet {
 
   """Month Income Sheet belongs to"""
   month: Int!
+
+  """Total Monthly Income"""
   totalAmount: Float!
 
   """Owner ID which Income sheet belongs to"""
