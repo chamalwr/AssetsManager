@@ -6,12 +6,14 @@ import { join } from 'path';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ExpenseSheetsModule } from './expense-sheets/expense-sheets.module';
 import { IncomeSheetsModule } from './income-sheets/income-sheets.module';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
 @Module({
   imports: [
     IncomeCategoriesModule,
     ExpenseCategoriesModule,
-    GraphQLModule.forRoot({
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/assests-manager-schema.gql'),
       sortSchema: true,
     }),
