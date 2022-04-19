@@ -7,19 +7,37 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ExpenseSheetsModule } from './expense-sheets/expense-sheets.module';
 import { IncomeSheetsModule } from './income-sheets/income-sheets.module';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { ConfigService } from '@nestjs/config';
+import ConfigurationsModule from './configurations/configurations.module';
 
 @Module({
   imports: [
     IncomeCategoriesModule,
     ExpenseCategoriesModule,
-    GraphQLModule.forRoot<ApolloDriverConfig>({
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'src/assests-manager-schema.gql'),
-      sortSchema: true,
+      imports: [ConfigurationsModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        return {
+          autoSchemaFile: join(process.cwd(), 'src/assests-manager-schema.gql'),
+          sortSchema: true,
+          introspection: configService.get('graphql.introspection'),
+        }
+      }
     }),
-    MongooseModule.forRoot('mongodb://localhost:27017/assets-manager'),
+    MongooseModule.forRootAsync({
+      imports: [ConfigurationsModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        return {
+          uri: configService.get('dataSources.mongodb.uri')
+        }
+      }
+    }),
     ExpenseSheetsModule,
     IncomeSheetsModule,
+    ConfigurationsModule,
   ],
   controllers: [],
   providers: [],
