@@ -27,14 +27,14 @@ async function getConfigs() {
   );
 
   logger.log(`Fetching Configs from ${configurationUrl}`);
-  const respose = await firstValueFrom(configResponseRawData);
-  const configData = respose.data;
+  const response = await firstValueFrom(configResponseRawData);
+  const configData = response.data.body.configs;
   await ConfigurationValidationSchema.validateAsync(configData).catch((err) => {
     logger.error(err);
     throw new Error(err);
   });
   logger.log(
-    `Configuration validation complete on ${configData.service.name}|${configData.service.stage}|${configData._id}`,
+    `Configuration validation complete on ${response.data.body.serviceName}|${response.data.body.stage}|${response.data.body._id}`,
   );
   return configData;
 }
