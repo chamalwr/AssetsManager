@@ -24,6 +24,6 @@ WORKDIR /usr/src/app
 COPY --from=build /usr/src/app/dist ./dist
 RUN chown node:node -R /usr/src/app/dist
 USER node
-CMD [ "npm", "run", "start:prod" ]
+CMD [ "node", "dist/main" ]
 
 
