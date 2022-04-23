@@ -22,7 +22,7 @@ RUN npm run build
 FROM prod AS assets-manager-prod
 WORKDIR /usr/src/app
 COPY --from=build /usr/src/app/dist ./dist
-RUN chown node:node -R /usr/src/app/dist
+RUN chown node:node -R /usr/src
 USER node
 CMD [ "node", "dist/main" ]
 
