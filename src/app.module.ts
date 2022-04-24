@@ -10,6 +10,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ConfigService } from '@nestjs/config';
 import { SecurityModule } from './security/security.module';
 import ConfigurationsModule from './configurations/configurations.module';
+require('newrelic');
 
 @Module({
   imports: [
