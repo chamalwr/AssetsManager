@@ -10,6 +10,8 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ConfigService } from '@nestjs/config';
 import { SecurityModule } from './security/security.module';
 import ConfigurationsModule from './configurations/configurations.module';
+require('newrelic');
+const apolloServerNewRelicPlugin = require('@newrelic/apollo-server-plugin')
 
 @Module({
   imports: [
@@ -25,6 +27,7 @@ import ConfigurationsModule from './configurations/configurations.module';
           sortSchema: true,
           introspection: configService.get('graphql.introspection'),
           playground: configService.get('graphql.playground'),
+          plugins: [apolloServerNewRelicPlugin]
         }
       }
     }),
