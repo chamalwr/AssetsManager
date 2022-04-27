@@ -9,7 +9,6 @@ import { IncomeSheetsModule } from './income-sheets/income-sheets.module';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ConfigService } from '@nestjs/config';
 import { SecurityModule } from './security/security.module';
-import { ObservabilityModule } from './observability/observability.module';
 import ConfigurationsModule from './configurations/configurations.module';
 require('newrelic');
 const apolloServerNewRelicPlugin = require('@newrelic/apollo-server-plugin')
@@ -54,7 +53,6 @@ const apolloServerNewRelicPlugin = require('@newrelic/apollo-server-plugin')
     IncomeSheetsModule,
     ConfigurationsModule,
     SecurityModule,
-    ObservabilityModule,
   ],
   controllers: [],
   providers: [],
