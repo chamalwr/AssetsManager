@@ -7,15 +7,15 @@ export const ExpenseRecordResult = createUnionType({
   types: () => [ExpenseRecord, ExpenseSheet, ExpenseRecordResultError],
   resolveType(value) {
     if (value.date || value.notes) {
-      return ExpenseRecord;
+      return 'ExpenseRecord';
     }
 
     if (value.month || value.year) {
-      return ExpenseSheet;
+      return 'ExpenseSheet';
     }
 
     if (value.reason) {
-      return ExpenseRecordResultError;
+      return 'ExpenseRecordResultError';
     }
   },
 });

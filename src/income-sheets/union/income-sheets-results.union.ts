@@ -7,15 +7,15 @@ export const IncomeSheetResult = createUnionType({
   types: () => [IncomeSheet, IncomeRecord, IncomeSheetResultError],
   resolveType(value) {
     if (value.month || value.year) {
-      return IncomeSheet;
+      return 'IncomeSheet';
     }
 
     if (value.date) {
-      return IncomeRecord;
+      return 'IncomeRecord';
     }
 
     if (value.message) {
-      return IncomeSheetResultError;
+      return 'IncomeSheetResultError';
     }
   },
 });

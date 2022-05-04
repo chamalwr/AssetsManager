@@ -29,7 +29,7 @@ export class IncomeSheet {
   @Prop([IncomeRecord])
   incomeRecords: IncomeRecord[];
 
-  @Field(() => Number, { defaultValue: 0.0 })
+  @Field(() => Number, { defaultValue: 0.0,  description: 'Total Monthly Income' })
   @Prop()
   totalAmount: number;
 
