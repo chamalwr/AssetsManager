@@ -7,6 +7,7 @@ import {
   ExpenseSheet,
   ExpenseSheetDocument,
 } from './entities/expense-sheet.entity';
+import { ExpenseSheetUtil } from '../util/expense-sheet.util';
 
 @Injectable()
 export class ExpenseSheetsService {
@@ -18,12 +19,40 @@ export class ExpenseSheetsService {
 
   async create(createExpenseSheetInput: CreateExpenseSheetInput) {
     try {
-      const createdExpenseSheet = await this.expenseSheetModel.create(
-        createExpenseSheetInput,
-      );
-      if (createdExpenseSheet) {
-        return createdExpenseSheet.save();
+      const isExpenseSheetExsists = await this.expenseSheetModel.findOne({
+        $and: [
+          { userId: createExpenseSheetInput.userId },
+          { month: createExpenseSheetInput.month },
+        ],
+      });
+      if (!isExpenseSheetExsists) {
+        const createdExpenseSheet = await this.expenseSheetModel.create(
+          createExpenseSheetInput,
+        );
+        if (createdExpenseSheet) {
+          createdExpenseSheet.totalAmount =
+            ExpenseSheetUtil.calculateTotalExpenses(
+              createdExpenseSheet.expenseRecords,
+            );
+          return createdExpenseSheet.save();
+        }
+        this.logger.warn(
+          `Unable to create income sheet : ${createExpenseSheetInput}`,
+        );
+        return {
+          operation: 'CREATE',
+          message: 'Could not create expense Sheet!',
+          reason: `Unable to create income sheet : ${createExpenseSheetInput}`,
+        };
       }
+      this.logger.warn(
+        `Selected user already has an Income Sheet for ${createExpenseSheetInput.month}th month`,
+      );
+      return {
+        operation: 'CREATE',
+        message: 'Could not create expense Sheet!',
+        reason: `Selected user already has an Income Sheet for ${createExpenseSheetInput.month}th month`,
+      };
     } catch (error) {
       this.logger.error(error);
       return {
@@ -84,6 +113,64 @@ export class ExpenseSheetsService {
         message: 'No Expense Sheet Available!',
         reason: error.message,
       };
+    }
+  }
+
+  async findByMonthAndYear(userId: string, month: number, year: number) {
+    try {
+      const expenseSheet = await this.expenseSheetModel.findOne({
+        $and: [{ userId: userId }, { month: month }, { year: year }],
+      });
+      if (expenseSheet) {
+        return expenseSheet.populate('expenseRecords.expenseCategory');
+      }
+      this.logger.warn(
+        `User ID : ${userId} , Month: ${month}, Year: ${year} has no any expense sheets available`,
+      );
+      return {
+        operation: 'FIND_BY_MONTH_AND_YEAR',
+        message: 'Could Not Get Expense Sheet',
+        reason: `User ID : ${userId} , Month: ${month}, Year: ${year} has no any expense sheets available`,
+      };
+    } catch (error) {
+      this.logger.error(error);
+      return {
+        operation: 'FIND_BY_MONTH_AND_YEAR',
+        message: 'Could Not Get Expense Sheet',
+        reason: error.message,
+      };
+    }
+  }
+
+  async findByYear(userId: string, year: number) {
+    try {
+      const expenseSheets = await this.expenseSheetModel
+        .find({
+          $and: [{ userId: userId }, { year: year }],
+        })
+        .populate('expenseRecords.expenseCategory');
+      if (expenseSheets.length > 0) {
+        return expenseSheets;
+      }
+      this.logger.warn(
+        `User ID : ${userId} or Year of : ${year} has no any expense sheets available`,
+      );
+      return [
+        {
+          operation: 'FIND_BY_YEAR',
+          message: 'Could Not Get Expense Sheets',
+          reason: `User ID : ${userId} or Year of : ${year} has no any expense sheets available`,
+        },
+      ];
+    } catch (error) {
+      this.logger.error(error);
+      return [
+        {
+          operation: 'FIND_BY_YEAR',
+          message: 'Could Not Get Expense Sheets',
+          reason: error.message,
+        },
+      ];
     }
   }
 

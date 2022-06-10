@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { IncomeSheetUtil } from 'src/util/income-sheet.util';
 import { CreateIncomeSheetInput } from './dto/create-income-sheet.input';
 import { UpdateIncomeSheetInput } from './dto/update-income-sheet.input';
 import {
@@ -18,23 +19,42 @@ export class IncomeSheetsService {
 
   async create(createIncomeSheetInput: CreateIncomeSheetInput) {
     try {
-      const createdIncomeSheet = await this.incomeSheetModel.create(
-        createIncomeSheetInput,
-      );
-      createdIncomeSheet.save();
-      if (createIncomeSheetInput) {
-        return createdIncomeSheet.populate('incomeRecords.incomeCategory');
+      const isIncomeSheetExsists = await this.incomeSheetModel.findOne({
+        $and: [
+          { userId: createIncomeSheetInput.userId },
+          { month: createIncomeSheetInput.month },
+        ],
+      });
+      if (!isIncomeSheetExsists) {
+        const createdIncomeSheet = await this.incomeSheetModel.create(
+          createIncomeSheetInput,
+        );
+        if (createIncomeSheetInput) {
+          createdIncomeSheet.totalAmount = IncomeSheetUtil.calculateTotalIncome(
+            createdIncomeSheet.incomeRecords,
+          );
+          createdIncomeSheet.save();
+          return createdIncomeSheet.populate('incomeRecords.incomeCategory');
+        }
+        this.logger.warn(
+          `Unable to create income sheet : ${createIncomeSheetInput}`,
+        );
+        return {
+          operation: 'CREATE',
+          message: 'Could not create income sheet',
+          reason: `Unable to create income sheet : ${createIncomeSheetInput}`,
+        };
       }
       this.logger.warn(
-        `Unable to create income sheet : ${createIncomeSheetInput}`,
+        `Selected user already has an Income Sheet for ${createIncomeSheetInput.month}th month`,
       );
       return {
         operation: 'CREATE',
         message: 'Could not create income sheet',
-        reason: `Unable to create income sheet : ${createIncomeSheetInput}`,
+        reason: `Selected user already has an Income Sheet for ${createIncomeSheetInput.month}th month, Cannot Create Duplicate Income Sheets`,
       };
     } catch (error) {
-      this.logger.error(error.message);
+      this.logger.error(error);
       return {
         operation: 'CREATE',
         message: 'Could not create income sheet!',
@@ -93,6 +113,64 @@ export class IncomeSheetsService {
       this.logger.error(error.message);
       return {
         operation: 'FIND_BY_ID',
+        message: 'No Income Sheet Available!',
+        reason: error.message,
+      };
+    }
+  }
+
+  async findByYear(userId: string, year: number) {
+    try {
+      const incomeSheets = await this.incomeSheetModel
+        .find({
+          $and: [{ userId: userId }, { year: year }],
+        })
+        .populate('incomeRecords.incomeCategory');
+      if (incomeSheets.length > 0) {
+        return incomeSheets;
+      }
+      this.logger.warn(
+        `User ID : ${userId} or Year of : ${year} has no any income sheets available`,
+      );
+      return [
+        {
+          operation: 'FIND_BY_YEAR',
+          message: 'No Income Sheets Available',
+          reason: `User ID : ${userId} or Year of : ${year} has no any income sheets available`,
+        },
+      ];
+    } catch (error) {
+      this.logger.error(error);
+      return [
+        {
+          operation: 'FIND_BY_YEAR',
+          message: 'No Income Sheets Available!',
+          reason: error.message,
+        },
+      ];
+    }
+  }
+
+  async findByMonthAndYear(userId: string, month: number, year: number) {
+    try {
+      const incomeSheet = await this.incomeSheetModel.findOne({
+        $and: [{ userId: userId }, { month: month }, { year: year }],
+      });
+      if (incomeSheet) {
+        return incomeSheet.populate('incomeRecords.incomeCategory');
+      }
+      this.logger.warn(
+        `User ID : ${userId} , Month: ${month}, Year: ${year} has no any income sheets available`,
+      );
+      return {
+        operation: 'FIND_BY_MONTH_AND_YEAR',
+        message: 'No Income Sheet Available',
+        reason: `User ID : ${userId} , Month: ${month}, Year: ${year} has no any income sheets available`,
+      };
+    } catch (error) {
+      this.logger.error(error);
+      return {
+        operation: 'FIND_BY_MONTH_AND_YEAR',
         message: 'No Income Sheet Available!',
         reason: error.message,
       };

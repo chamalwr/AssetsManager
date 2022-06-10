@@ -6,18 +6,50 @@ import { join } from 'path';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ExpenseSheetsModule } from './expense-sheets/expense-sheets.module';
 import { IncomeSheetsModule } from './income-sheets/income-sheets.module';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { ConfigService } from '@nestjs/config';
+import { SecurityModule } from './security/security.module';
+import ConfigurationsModule from './configurations/configurations.module';
 
 @Module({
   imports: [
     IncomeCategoriesModule,
     ExpenseCategoriesModule,
-    GraphQLModule.forRoot({
-      autoSchemaFile: join(process.cwd(), 'src/assests-manager-schema.gql'),
-      sortSchema: true,
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      imports: [ConfigurationsModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        return {
+          autoSchemaFile: join(process.cwd(), 'src/assests-manager-schema.gql'),
+          sortSchema: true,
+          introspection: configService.get('graphql.introspection'),
+          playground: configService.get('graphql.playground'),
+        }
+      }
     }),
-    MongooseModule.forRoot('mongodb://localhost:27017/assets-manager'),
+    MongooseModule.forRootAsync({
+      imports: [ConfigurationsModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        return {
+          uri: configService.get('dataSources.mongodb.uri'),
+          dbName: configService.get('dataSources.mongodb.dbName'),
+          retryAttempts: 3,
+          ssl: true,
+          sslValidate: true,
+          authMechanism: 'MONGODB-X509',
+          tlsCertificateKeyFile: join(
+            __dirname,
+            'security/cert/assert-manager-db.pem',
+          )
+        }
+      }
+    }),
     ExpenseSheetsModule,
     IncomeSheetsModule,
+    ConfigurationsModule,
+    SecurityModule,
   ],
   controllers: [],
   providers: [],

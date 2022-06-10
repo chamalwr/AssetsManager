@@ -15,7 +15,7 @@ input CreateExpenseCategoryInput {
 
 input CreateExpenseRecordInput {
   """Amount"""
-  amount: String!
+  amount: Float!
 
   """Date that expense occured"""
   date: Int!
@@ -57,7 +57,7 @@ input CreateIncomeCategoryInput {
 
 input CreateIncomeRecordInput {
   """Amount"""
-  amount: String!
+  amount: Float!
 
   """Date that income record occured"""
   date: Int!
@@ -118,7 +118,7 @@ type ExpenseRecord {
   _id: ID
 
   """Amount"""
-  amount: String
+  amount: Float
 
   """Date that expense occured"""
   date: Int
@@ -155,6 +155,9 @@ type ExpenseSheet {
 
   """Month Expense Sheet belongs to"""
   month: Int!
+
+  """Total amount spent"""
+  totalAmount: Float!
 
   """Owner ID which expense sheet belongs to"""
   userId: String!
@@ -208,7 +211,7 @@ type IncomeRecord {
   _id: ID
 
   """Amount"""
-  amount: String
+  amount: Float
 
   """Date that income occured"""
   date: Int
@@ -232,6 +235,9 @@ type IncomeSheet {
 
   """Month Income Sheet belongs to"""
   month: Int!
+
+  """Total Monthly Income"""
+  totalAmount: Float!
 
   """Owner ID which Income sheet belongs to"""
   userId: String!
@@ -281,12 +287,16 @@ type Query {
   expenseRecords(expenseSheetId: String!): [ExpenseRecordResult!]!
   expenseSheet(id: String!): ExpenseSheetResult!
   expenseSheets(userId: String!): [ExpenseSheetResult!]!
+  expeseSheetByMonthAndYear(month: Float!, userId: String!, year: Float!): ExpenseSheetResult!
+  expeseSheetsByYear(userId: String!, year: Float!): [ExpenseSheetResult!]!
   incomeCategories(userId: String!): [IncomeCategoryResult!]!
   incomeCategory(id: String!): IncomeCategoryResult!
   incomeRecord(id: String!, incomeSheetId: String!): IncomeSheetResult!
   incomeRecords(incomeSheetId: String!): [IncomeSheetResult!]!
   incomeSheet(id: String!): IncomeSheetResult!
+  incomeSheetByMonthAndYear(month: Float!, userId: String!, year: Float!): IncomeSheetResult!
   incomeSheets(userId: String!): [IncomeSheetResult!]!
+  incomeSheetsByYear(userId: String!, year: Float!): [IncomeSheetResult!]!
 }
 
 input UpdateExpenseCategoryInput {
@@ -299,7 +309,7 @@ input UpdateExpenseCategoryInput {
 
 input UpdateExpenseRecordInput {
   """Amount"""
-  amount: String
+  amount: Float
 
   """Date that expense occured"""
   date: Int
@@ -332,7 +342,7 @@ input UpdateIncomeCategoryInput {
 
 input UpdateIncomeRecordInput {
   """Amount"""
-  amount: String
+  amount: Float
 
   """Date that income record occured"""
   date: Int

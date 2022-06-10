@@ -6,10 +6,10 @@ export const ExpenseSheetResult = createUnionType({
   types: () => [ExpenseSheet, ExpenseSheetResultError],
   resolveType(value) {
     if (value.month) {
-      return ExpenseSheet;
+      return 'ExpenseSheet';
     }
     if (value.reason) {
-      return ExpenseSheetResultError;
+      return 'ExpenseSheetResultError';
     }
   },
 });
